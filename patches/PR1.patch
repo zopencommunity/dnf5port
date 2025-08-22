@@ -281,23 +281,6 @@ index 257a248..fa9a195 100644
  set(DNF_SO_VERSION 2)
  set_target_properties(libdnf5 PROPERTIES OUTPUT_NAME "dnf5")
  set_target_properties(libdnf5 PROPERTIES SOVERSION ${DNF_SO_VERSION})
-diff --git a/libdnf5/common/sack/match_string.cpp b/libdnf5/common/sack/match_string.cpp
-index 739c35c..c9ba666 100644
---- a/libdnf5/common/sack/match_string.cpp
-+++ b/libdnf5/common/sack/match_string.cpp
-@@ -44,10 +44,10 @@ bool match_string(const std::string & value, QueryCmp cmp, const std::string & p
-             result = libdnf5::utils::string::tolower(value) == libdnf5::utils::string::tolower(pattern);
-             break;
-         case QueryCmp::GLOB:
--            result = fnmatch(pattern.c_str(), value.c_str(), FNM_EXTMATCH) == 0;
-+            result = fnmatch(pattern.c_str(), value.c_str(), 0) == 0;
-             break;
-         case QueryCmp::IGLOB:
--            result = fnmatch(pattern.c_str(), value.c_str(), FNM_CASEFOLD | FNM_EXTMATCH) == 0;
-+            result = fnmatch(pattern.c_str(), value.c_str(), FNM_CASEFOLD) == 0;
-             break;
-         case QueryCmp::REGEX:
-             result = std::regex_match(value, std::regex(pattern));
 diff --git a/libdnf5/conf/config_utils.cpp b/libdnf5/conf/config_utils.cpp
 index 68037ab..07561e2 100644
 --- a/libdnf5/conf/config_utils.cpp
