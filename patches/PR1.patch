@@ -12,10 +12,18 @@ index 70eb5d3..0405b85 100644
  add_compile_options(-Werror=unused-result -Wodr)
  
 diff --git a/dnf5-plugins/CMakeLists.txt b/dnf5-plugins/CMakeLists.txt
-index bf3b141..40e72b7 100644
+index bf3b141..c01191a 100644
 --- a/dnf5-plugins/CMakeLists.txt
 +++ b/dnf5-plugins/CMakeLists.txt
-@@ -15,6 +15,6 @@ add_subdirectory("builddep_plugin")
+@@ -8,13 +8,13 @@ set(CMAKE_C_VISIBILITY_PRESET hidden)
+ include_directories("${PROJECT_SOURCE_DIR}/dnf5/include/")
+ # These plugins use symbols from dnf5 program, hence the symbold are undefined
+ # at link time and cannot pass "-z defs" linker check. Disable the check.
+-set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,-z,undefs")
++#set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,-z,undefs")
+ 
+ add_subdirectory("automatic_plugin")
+ add_subdirectory("builddep_plugin")
  add_subdirectory("changelog_plugin")
  add_subdirectory("config-manager_plugin")
  add_subdirectory("copr_plugin")
@@ -23,6 +31,19 @@ index bf3b141..40e72b7 100644
 +#add_subdirectory("needs_restarting_plugin")
  add_subdirectory("repoclosure_plugin")
  add_subdirectory("reposync_plugin")
+diff --git a/dnf5-plugins/automatic_plugin/CMakeLists.txt b/dnf5-plugins/automatic_plugin/CMakeLists.txt
+index d0834cb..425afe6 100644
+--- a/dnf5-plugins/automatic_plugin/CMakeLists.txt
++++ b/dnf5-plugins/automatic_plugin/CMakeLists.txt
+@@ -9,7 +9,7 @@ add_library(automatic_cmd_plugin MODULE ${AUTOMATIC_SOURCES})
+ set_target_properties(automatic_cmd_plugin PROPERTIES PREFIX "")
+ 
+ target_link_libraries(automatic_cmd_plugin PRIVATE libdnf5 libdnf5-cli)
+-target_link_libraries(automatic_cmd_plugin PRIVATE dnf5)
++target_link_libraries(automatic_cmd_plugin PRIVATE dnf5_core)
+ 
+ install(TARGETS automatic_cmd_plugin LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/dnf5/plugins/)
+ install(DIRECTORY "config/usr/" DESTINATION "${CMAKE_INSTALL_PREFIX}")
 diff --git a/dnf5-plugins/automatic_plugin/automatic.cpp b/dnf5-plugins/automatic_plugin/automatic.cpp
 index 020ec26..f4e7d44 100644
 --- a/dnf5-plugins/automatic_plugin/automatic.cpp
@@ -151,7 +172,7 @@ index 3965ec4..bf7c6dc 100644
  
  constexpr const char * MOTD_FILENAME = "/etc/motd.d/dnf5-automatic";
 diff --git a/dnf5-plugins/builddep_plugin/CMakeLists.txt b/dnf5-plugins/builddep_plugin/CMakeLists.txt
-index b8640e1..143e668 100644
+index b8640e1..018afda 100644
 --- a/dnf5-plugins/builddep_plugin/CMakeLists.txt
 +++ b/dnf5-plugins/builddep_plugin/CMakeLists.txt
 @@ -7,7 +7,7 @@ add_library(builddep_cmd_plugin MODULE builddep.cpp builddep_cmd_plugin.cpp)
@@ -163,6 +184,117 @@ index b8640e1..143e668 100644
  target_link_libraries(builddep_cmd_plugin PRIVATE ${RPMBUILD})
  
  pkg_check_modules(RPM REQUIRED rpm)
+@@ -15,7 +15,7 @@ target_link_libraries(builddep_cmd_plugin PRIVATE ${RPM_LIBRARIES})
+ 
+ target_link_libraries(builddep_cmd_plugin PRIVATE common_obj)
+ target_link_libraries(builddep_cmd_plugin PRIVATE libdnf5 libdnf5-cli)
+-target_link_libraries(builddep_cmd_plugin PRIVATE dnf5)
++target_link_libraries(builddep_cmd_plugin PRIVATE dnf5_core)
+ 
+ install(TARGETS builddep_cmd_plugin LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/dnf5/plugins/)
+ 
+diff --git a/dnf5-plugins/changelog_plugin/CMakeLists.txt b/dnf5-plugins/changelog_plugin/CMakeLists.txt
+index 9b4a553..c02ae2f 100644
+--- a/dnf5-plugins/changelog_plugin/CMakeLists.txt
++++ b/dnf5-plugins/changelog_plugin/CMakeLists.txt
+@@ -8,7 +8,7 @@ add_library(changelog_cmd_plugin MODULE changelog.cpp changelog_cmd_plugin.cpp)
+ set_target_properties(changelog_cmd_plugin PROPERTIES PREFIX "")
+ 
+ target_link_libraries(changelog_cmd_plugin PRIVATE libdnf5 libdnf5-cli)
+-target_link_libraries(changelog_cmd_plugin PRIVATE dnf5)
++target_link_libraries(changelog_cmd_plugin PRIVATE dnf5_core)
+ 
+ install(TARGETS changelog_cmd_plugin LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/dnf5/plugins/)
+ 
+diff --git a/dnf5-plugins/config-manager_plugin/CMakeLists.txt b/dnf5-plugins/config-manager_plugin/CMakeLists.txt
+index da04603..3785642 100644
+--- a/dnf5-plugins/config-manager_plugin/CMakeLists.txt
++++ b/dnf5-plugins/config-manager_plugin/CMakeLists.txt
+@@ -18,7 +18,7 @@ find_package(ZLIB REQUIRED)
+ 
+ target_link_libraries(config-manager_cmd_plugin PRIVATE ZLIB::ZLIB)
+ target_link_libraries(config-manager_cmd_plugin PRIVATE libdnf5 libdnf5-cli)
+-target_link_libraries(config-manager_cmd_plugin PRIVATE dnf5)
++target_link_libraries(config-manager_cmd_plugin PRIVATE dnf5_core)
+ 
+ install(TARGETS config-manager_cmd_plugin LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/dnf5/plugins/)
+ 
+diff --git a/dnf5-plugins/copr_plugin/CMakeLists.txt b/dnf5-plugins/copr_plugin/CMakeLists.txt
+index c3829fe..b604023 100644
+--- a/dnf5-plugins/copr_plugin/CMakeLists.txt
++++ b/dnf5-plugins/copr_plugin/CMakeLists.txt
+@@ -13,7 +13,7 @@ include_directories(${JSONC_INCLUDE_DIRS})
+ target_link_libraries(copr_cmd_plugin PRIVATE ${JSONC_LIBRARIES})
+ 
+ target_link_libraries(copr_cmd_plugin PRIVATE libdnf5 libdnf5-cli)
+-target_link_libraries(copr_cmd_plugin PRIVATE dnf5)
++target_link_libraries(copr_cmd_plugin PRIVATE dnf5_core)
+ 
+ install(TARGETS copr_cmd_plugin LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/dnf5/plugins/)
+ 
+diff --git a/dnf5-plugins/needs_restarting_plugin/CMakeLists.txt b/dnf5-plugins/needs_restarting_plugin/CMakeLists.txt
+index cf29014..3caafda 100644
+--- a/dnf5-plugins/needs_restarting_plugin/CMakeLists.txt
++++ b/dnf5-plugins/needs_restarting_plugin/CMakeLists.txt
+@@ -9,7 +9,7 @@ set_target_properties(needs_restarting_cmd_plugin PROPERTIES PREFIX "")
+ 
+ include(sdbus_cpp)
+ 
+-target_link_libraries(needs_restarting_cmd_plugin PRIVATE dnf5 libdnf5 libdnf5-cli ${SDBUS_CPP_LIBRARIES})
++target_link_libraries(needs_restarting_cmd_plugin PRIVATE dnf5_core libdnf5 libdnf5-cli ${SDBUS_CPP_LIBRARIES})
+ 
+ install(TARGETS needs_restarting_cmd_plugin LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/dnf5/plugins/)
+ 
+diff --git a/dnf5-plugins/repoclosure_plugin/CMakeLists.txt b/dnf5-plugins/repoclosure_plugin/CMakeLists.txt
+index 119a211..2691a15 100644
+--- a/dnf5-plugins/repoclosure_plugin/CMakeLists.txt
++++ b/dnf5-plugins/repoclosure_plugin/CMakeLists.txt
+@@ -8,7 +8,7 @@ add_library(repoclosure_cmd_plugin MODULE repoclosure.cpp repoclosure_cmd_plugin
+ set_target_properties(repoclosure_cmd_plugin PROPERTIES PREFIX "")
+ 
+ target_link_libraries(repoclosure_cmd_plugin PRIVATE libdnf5 libdnf5-cli)
+-target_link_libraries(repoclosure_cmd_plugin PRIVATE dnf5)
++target_link_libraries(repoclosure_cmd_plugin PRIVATE dnf5_core)
+ 
+ install(TARGETS repoclosure_cmd_plugin LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/dnf5/plugins/)
+ 
+diff --git a/dnf5-plugins/reposync_plugin/CMakeLists.txt b/dnf5-plugins/reposync_plugin/CMakeLists.txt
+index 7e3f7c1..6e3ac31 100644
+--- a/dnf5-plugins/reposync_plugin/CMakeLists.txt
++++ b/dnf5-plugins/reposync_plugin/CMakeLists.txt
+@@ -8,7 +8,7 @@ add_library(reposync_cmd_plugin MODULE reposync.cpp reposync_cmd_plugin.cpp)
+ set_target_properties(reposync_cmd_plugin PROPERTIES PREFIX "")
+ 
+ target_link_libraries(reposync_cmd_plugin PRIVATE libdnf5 libdnf5-cli)
+-target_link_libraries(reposync_cmd_plugin PRIVATE dnf5)
++target_link_libraries(reposync_cmd_plugin PRIVATE dnf5_core)
+ 
+ install(TARGETS reposync_cmd_plugin LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/dnf5/plugins/)
+ install(DIRECTORY "config/usr/" DESTINATION "${CMAKE_INSTALL_PREFIX}")
+diff --git a/dnf5/CMakeLists.txt b/dnf5/CMakeLists.txt
+index d1438d3..d84c83e 100644
+--- a/dnf5/CMakeLists.txt
++++ b/dnf5/CMakeLists.txt
+@@ -35,11 +35,17 @@ include_directories(.)
+ add_executable(dnf5 ${DNF5_SOURCES})
+ 
+ # Enable symbol export. Needed for loadable modules (dnf5 plugins).
+-set_property(TARGET dnf5 PROPERTY ENABLE_EXPORTS 1)
++#set_property(TARGET dnf5 PROPERTY ENABLE_EXPORTS 1)
+ # Export only explicitly marked symbols.
+ set_target_properties(dnf5 PROPERTIES C_VISIBILITY_PRESET hidden CXX_VISIBILITY_PRESET hidden)
+-
+ target_link_libraries(dnf5 PRIVATE common_obj libdnf5 libdnf5-cli Threads::Threads)
++
++# Build a separate shared library from the same sources
++add_library(dnf5_core SHARED ${DNF5_SOURCES})
++set_target_properties(dnf5_core PROPERTIES OUTPUT_NAME "dnf5_core")
++target_compile_options(dnf5_core PRIVATE -fvisibility=default)
++target_link_libraries(dnf5_core PRIVATE common_obj libdnf5 libdnf5-cli Threads::Threads)
++
+ install(TARGETS dnf5 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+ 
+ pkg_check_modules(RPM REQUIRED rpm>=4.17.0)
 diff --git a/dnf5/commands/offline/offline.cpp b/dnf5/commands/offline/offline.cpp
 index a32dbc1..a70c122 100644
 --- a/dnf5/commands/offline/offline.cpp
