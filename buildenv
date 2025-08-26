@@ -16,7 +16,7 @@ export ZOPEN_BUILD_LINE="STABLE"
 
 ## Required IF ZOPEN_BUILD_LINE='STABLE'
 export ZOPEN_STABLE_URL="https://github.com/rpm-software-management/dnf5.git"  # Specify the stable build URL (either git or tarball)
-export ZOPEN_STABLE_DEPS="zoslib make curl cmake pkgconfig toml11 fmt jsonc libsolv rpm popt libxml2 librepo glib libpsl sqlite gettext bash-completion util zlib bzip2 zstd lua libgcrypt libgpgme libgpgerror libassuan" # Specify the stable build dependencies.
+export ZOPEN_STABLE_DEPS="zoslib make curl cmake pkgconfig toml11 fmt jsonc libsolv rpm popt libxml2 librepo glib libpsl sqlite gettext bash-completion util-linux zlib bzip2 zstd lua libgcrypt libgpgme libgpgerror libassuan check_python" # Specify the stable build dependencies.
 
 ## Required IF ZOPEN_BUILD_LINE='DEV'
 export ZOPEN_DEV_URL=""   # Specify the dev build URL
@@ -70,7 +70,7 @@ zopen_get_version()
 {
   # Modify to echo the version of your tool/library
   # Rather than hardcoding the version, obtain the version by running the tool/library
-  echo "1.0.0"
+  echo $DNF5_VERSION
 }
 
 
@@ -78,10 +78,18 @@ zopen_get_version()
 ### Optional user-supplied functions for zopen-build
 ###
 
-#zopen_append_to_env() {
+zopen_append_to_env() {
   ## This function runs as part of generation of the .env file. The output of the
   ## function is appended to .env.
-#}
+  cat <<ZZ
+if [ ! -z "\$ZOPEN_IN_ZOPEN_BUILD" ]; then
+  export ZOPEN_EXTRA_CFLAGS="\${ZOPEN_EXTRA_CFLAGS} -I\$PWD/include"
+  export ZOPEN_EXTRA_CXXFLAGS="\${ZOPEN_EXTRA_CXXFLAGS} -I\$PWD/include"
+  export ZOPEN_EXTRA_LDFLAGS="\${ZOPEN_EXTRA_LDFLAGS} -L\$PWD/lib"
+  export ZOPEN_EXTRA_LIBS="\${ZOPEN_EXTRA_LIBS} -ldnf5_sd"
+fi
+ZZ
+}
 
 #zopen_append_to_setup(){
   ## This function runs as part of generation of the setup.sh file. The output of
@@ -98,15 +106,18 @@ zopen_get_version()
   ## added to the metadata.json as installation caveats.
 #}
 
-#zopen_append_to_zoslib_env(){
+zopen_append_to_zoslib_env(){
   ## This function runs as part of generation of the C function zoslib_env_hook,
   ## which can be used to set environment variables before main is run.
-#}
+cat <<EOF
+LIBPATH|prepend|PROJECT_ROOT/lib/libdnf5/plugins/:PROJECT_ROOT/lib/dnf5/plugins/:PROJECT_ROOT/lib/
+EOF
+}
 
-#zopen_init(){
+zopen_init(){
   ## This function runs after code is downloaded and patched but before the code
   ## is built.
-#}
+}
 
 #zopen_post_buildenv(){
   ## This function runs after the 'buildenv' is processed.
@@ -128,9 +139,14 @@ zopen_get_version()
   ## This function runs before the 'install' step of the build is run.
 #}
 
-#zopen_post_install(){
+zopen_post_install(){
   ## This function runs after the 'install' step of the build is run.
-#}
+  install_dir=$1
+  cd ${install_dir}/lib
+  ar rv libdnf5_sd.a *.x
+  rm *.x
+  cd -
+}
 
 #zopen_pre_patch(){
   ## This function runs before the 'patch' step of the build is run.
@@ -156,10 +172,10 @@ export ZOPEN_EXTRA_LDFLAGS="-mzos-hlq-le=CEE -mzos-hlq-clang=CEE" ## C,C++ linke
 #export ZOPEN_CHECK_TIMEOUT="" ## Timeout limit in seconds for the check program (defaults to '12600' # 3.5 hours)
 #export ZOPEN_CLEAN_OPTS="" ## Options to pass to clean up  program (defaults to 'clean')
 #export ZOPEN_CONFIGURE_MINIMAL="" ## Configuration program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will get them from env vars.
-export ZOPEN_CONFIGURE_OPTS="-B ../build --install-prefix \$ZOPEN_INSTALL_DIR/ -DCMAKE_INSTALL_PREFIX=\$ZOPEN_INSTALL_DIR/ -DCURL_LIBRARY=\"\$CURL_HOME/lib/libcurl.a\" -DCURL_INCLUDE_DIR=\"\$CURL_HOME/include\" -DZLIB_LIBRARY=\"\$ZLIB_HOME/lib/libz.a\" -DWITH_SYSTEMD=OFF -DWITH_DNF5DAEMON_CLIENT=OFF -DWITH_DNF5DAEMON_SERVER=OFF -DWITH_MODULEMD=OFF -DWITH_LIBDNF5_CLI=ON -DWITH_PLUGIN_APPSTREAM=OFF -DWITH_PYTHON_PLUGINS_LOADER=OFF -DWITH_PERL5=OFF -DWITH_PYTHON3=OFF -DWITH_RUBY=OFF -DWITH_TESTS=OFF" ## Options to pass to configuration program (defaults to '--prefix=')
+export ZOPEN_CONFIGURE_OPTS="-B ../build --install-prefix \$ZOPEN_INSTALL_DIR/ -DCMAKE_INSTALL_PREFIX=\$ZOPEN_INSTALL_DIR/ -DCURL_LIBRARY=\"\$CURL_HOME/lib/libcurl.a\" -DCURL_INCLUDE_DIR=\"\$CURL_HOME/include\" -DZLIB_LIBRARY=\"\$ZLIB_HOME/lib/libz.a\" -DWITH_SYSTEMD=OFF -DWITH_DNF5DAEMON_CLIENT=OFF -DWITH_DNF5DAEMON_SERVER=OFF -DWITH_MODULEMD=OFF -DWITH_LIBDNF5_CLI=ON -DWITH_PLUGIN_APPSTREAM=OFF -DWITH_PYTHON_PLUGINS_LOADER=OFF -DWITH_PERL5=OFF -DWITH_PYTHON3=OFF -DWITH_RUBY=OFF -DWITH_TESTS=OFF -DWITH_MAN=OFF -DWITH_HTML=OFF" ## Options to pass to configuration program (defaults to '--prefix=')
 
 #export ZOPEN_EXTRA_CONFIGURE_OPTS="" ## Extra configure options to pass to configuration program. (defaults to '')
-#export ZOPEN_INSTALL_OPTS="" ## Options to pass to installation program (defaults to 'install')
+export ZOPEN_INSTALL_OPTS="-C ../build install" ## Options to pass to installation program (defaults to 'install')
 #export ZOPEN_MAKE_MINIMAL="" ## Build program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will get them from env vars.
 export ZOPEN_MAKE_OPTS="-C ../build" ## Options to pass to build program (defaults to '-j')
 #export ZOPEN_PATCH_DIR="" ## Specify directory from which patches should be applied.

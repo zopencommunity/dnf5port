@@ -272,10 +272,10 @@ index 7e3f7c1..6e3ac31 100644
  install(TARGETS reposync_cmd_plugin LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/dnf5/plugins/)
  install(DIRECTORY "config/usr/" DESTINATION "${CMAKE_INSTALL_PREFIX}")
 diff --git a/dnf5/CMakeLists.txt b/dnf5/CMakeLists.txt
-index d1438d3..d84c83e 100644
+index d1438d3..eb88be7 100644
 --- a/dnf5/CMakeLists.txt
 +++ b/dnf5/CMakeLists.txt
-@@ -35,11 +35,17 @@ include_directories(.)
+@@ -35,13 +35,20 @@ include_directories(.)
  add_executable(dnf5 ${DNF5_SOURCES})
  
  # Enable symbol export. Needed for loadable modules (dnf5 plugins).
@@ -285,16 +285,20 @@ index d1438d3..d84c83e 100644
  set_target_properties(dnf5 PROPERTIES C_VISIBILITY_PRESET hidden CXX_VISIBILITY_PRESET hidden)
 -
  target_link_libraries(dnf5 PRIVATE common_obj libdnf5 libdnf5-cli Threads::Threads)
-+
+-install(TARGETS dnf5 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+ 
 +# Build a separate shared library from the same sources
 +add_library(dnf5_core SHARED ${DNF5_SOURCES})
 +set_target_properties(dnf5_core PROPERTIES OUTPUT_NAME "dnf5_core")
 +target_compile_options(dnf5_core PRIVATE -fvisibility=default)
 +target_link_libraries(dnf5_core PRIVATE common_obj libdnf5 libdnf5-cli Threads::Threads)
 +
- install(TARGETS dnf5 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
- 
++install(TARGETS dnf5 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++install(TARGETS dnf5_core LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
++install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/libdnf5_core.so DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
  pkg_check_modules(RPM REQUIRED rpm>=4.17.0)
+ 
+ if(WITH_SYSTEMD)
 diff --git a/dnf5/commands/offline/offline.cpp b/dnf5/commands/offline/offline.cpp
 index a32dbc1..a70c122 100644
 --- a/dnf5/commands/offline/offline.cpp
@@ -341,19 +345,26 @@ index 9986849..6d7099c 100644
              } else {
                  throw libdnf5::cli::AbortedByUserError();
              }
+diff --git a/etc/CMakeLists.txt b/etc/CMakeLists.txt
+index 534840c..92f19d2 100644
+--- a/etc/CMakeLists.txt
++++ b/etc/CMakeLists.txt
+@@ -1 +1 @@
+-add_subdirectory("systemd")
++#add_subdirectory("systemd")
 diff --git a/libdnf5-cli/CMakeLists.txt b/libdnf5-cli/CMakeLists.txt
-index ba92d79..434085e 100644
+index ba92d79..59c7fcd 100644
 --- a/libdnf5-cli/CMakeLists.txt
 +++ b/libdnf5-cli/CMakeLists.txt
-@@ -28,7 +28,7 @@ list(APPEND LIBDNF5_CLI_PC_REQUIRES_PRIVATE)
- include_directories(.)
+@@ -38,7 +38,7 @@ target_link_libraries(libdnf5-cli PUBLIC stdc++)
  
- # build libdnf5-cli.so
--add_library(libdnf5-cli SHARED ${LIBDNF5_CLI_SOURCES})
-+add_library(libdnf5-cli STATIC ${LIBDNF5_CLI_SOURCES})
- set(DNF_CLI_SO_VERSION 2)
- set_target_properties(libdnf5-cli PROPERTIES OUTPUT_NAME "dnf5-cli")
- set_target_properties(libdnf5-cli PROPERTIES SOVERSION ${DNF_CLI_SO_VERSION})
+ # install libdnf5-cli.so
+ install(TARGETS libdnf5-cli LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
+-
++install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/libdnf5-cli.so DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
+ 
+ # link libraries and set pkg-config requires
+ 
 diff --git a/libdnf5-cli/output/transactioninfo.cpp b/libdnf5-cli/output/transactioninfo.cpp
 index 276f741..c9749c5 100644
 --- a/libdnf5-cli/output/transactioninfo.cpp
@@ -401,18 +412,17 @@ index c8100a8..4c65d5d 100644
  add_subdirectory("actions")
  add_subdirectory("appstream")
 diff --git a/libdnf5/CMakeLists.txt b/libdnf5/CMakeLists.txt
-index 257a248..fa9a195 100644
+index 257a248..fa05f4a 100644
 --- a/libdnf5/CMakeLists.txt
 +++ b/libdnf5/CMakeLists.txt
-@@ -41,7 +41,7 @@ add_library(libdnf5_iface INTERFACE)
- target_link_libraries(libdnf5_iface INTERFACE libdnf5_obj $<TARGET_OBJECTS:libdnf5_obj>)
+@@ -53,6 +53,7 @@ target_link_libraries(libdnf5 PUBLIC stdc++)
  
- # build libdnf5.so
--add_library(libdnf5 SHARED $<TARGET_OBJECTS:libdnf5_obj>)
-+add_library(libdnf5 STATIC $<TARGET_OBJECTS:libdnf5_obj>)
- set(DNF_SO_VERSION 2)
- set_target_properties(libdnf5 PROPERTIES OUTPUT_NAME "dnf5")
- set_target_properties(libdnf5 PROPERTIES SOVERSION ${DNF_SO_VERSION})
+ # install libdnf5.so
+ install(TARGETS libdnf5 LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
++install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/libdnf5.so DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
+ 
+ target_link_libraries(libdnf5 PRIVATE common_obj)
+ target_link_libraries(libdnf5_iface INTERFACE $<TARGET_OBJECTS:common_obj>)
 diff --git a/libdnf5/conf/config_utils.cpp b/libdnf5/conf/config_utils.cpp
 index 68037ab..07561e2 100644
 --- a/libdnf5/conf/config_utils.cpp
