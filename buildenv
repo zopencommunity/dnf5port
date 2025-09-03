@@ -86,7 +86,7 @@ if [ ! -z "\$ZOPEN_IN_ZOPEN_BUILD" ]; then
   export ZOPEN_EXTRA_CFLAGS="\${ZOPEN_EXTRA_CFLAGS} -I\$PWD/include"
   export ZOPEN_EXTRA_CXXFLAGS="\${ZOPEN_EXTRA_CXXFLAGS} -I\$PWD/include"
   export ZOPEN_EXTRA_LDFLAGS="\${ZOPEN_EXTRA_LDFLAGS} -L\$PWD/lib"
-  export ZOPEN_EXTRA_LIBS="\${ZOPEN_EXTRA_LIBS} -ldnf5_sd"
+  export ZOPEN_EXTRA_LIBS="\${ZOPEN_EXTRA_LIBS} -ldnf5_core -ldnf5 -ldnf5-cli"
 fi
 ZZ
 }
@@ -139,14 +139,9 @@ zopen_init(){
   ## This function runs before the 'install' step of the build is run.
 #}
 
-zopen_post_install(){
+#zopen_post_install(){
   ## This function runs after the 'install' step of the build is run.
-  install_dir=$1
-  cd ${install_dir}/lib
-  ar rv libdnf5_sd.a *.x
-  rm *.x
-  cd -
-}
+#}
 
 #zopen_pre_patch(){
   ## This function runs before the 'patch' step of the build is run.
