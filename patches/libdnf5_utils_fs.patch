@@ -1,0 +1,43 @@
+diff --git a/libdnf5/utils/fs/temp.cpp b/libdnf5/utils/fs/temp.cpp
+index daa6d25..8a23a0e 100644
+--- a/libdnf5/utils/fs/temp.cpp
++++ b/libdnf5/utils/fs/temp.cpp
+@@ -25,6 +25,7 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ #include <libdnf5/utils/bgettext/bgettext-mark-domain.h>
+ #include <unistd.h>
+ 
++#include <zos-filesystem.h>
+ 
+ namespace libdnf5::utils::fs {
+ 
+@@ -62,7 +63,7 @@ TempDir & TempDir::operator=(TempDir && src) noexcept {
+ TempDir::~TempDir() {
+     try {
+         if (!path.empty()) {
+-            std::filesystem::remove_all(path);
++            portable_remove_all(path);
+         }
+     } catch (std::exception &) {
+         // catch an exception that shouldn't be raised in a destructor
+diff --git a/libdnf5/utils/fs/utils.cpp b/libdnf5/utils/fs/utils.cpp
+index 3c858f2..a35bf5c 100644
+--- a/libdnf5/utils/fs/utils.cpp
++++ b/libdnf5/utils/fs/utils.cpp
+@@ -26,6 +26,8 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ #include <algorithm>
+ #include <cstring>
+ 
++#include <zos-filesystem.h>
++
+ namespace libdnf5::utils::fs {
+ 
+ namespace stdfs = std::filesystem;
+@@ -81,7 +83,7 @@ void move_recursive(const std::filesystem::path & src, const std::filesystem::pa
+         std::filesystem::rename(src, dest);
+     } catch (const std::filesystem::filesystem_error &) {
+         std::filesystem::copy(src, dest, std::filesystem::copy_options::recursive);
+-        std::filesystem::remove_all(src);
++        portable_remove_all(src);
+     }
+ }
+ 

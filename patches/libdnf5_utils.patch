@@ -1,0 +1,42 @@
+diff --git a/libdnf5/utils/library.cpp b/libdnf5/utils/library.cpp
+index b2a5052..e864d8b 100644
+--- a/libdnf5/utils/library.cpp
++++ b/libdnf5/utils/library.cpp
+@@ -23,6 +23,8 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ 
+ #include <dlfcn.h>
+ 
++#define RTLD_NODELETE 0
++
+ namespace libdnf5::utils {
+ 
+ Library::Library(const std::string & path) : path(path) {
+diff --git a/libdnf5/utils/system.cpp b/libdnf5/utils/system.cpp
+index 89c1130..a2a2a3d 100644
+--- a/libdnf5/utils/system.cpp
++++ b/libdnf5/utils/system.cpp
+@@ -22,7 +22,7 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ #include <libdnf5/common/exception.hpp>
+ #include <libdnf5/utils/bgettext/bgettext-mark-domain.h>
+ #include <rpm/rpmlib.h>
+-#include <sys/auxv.h>
++//#include <sys/auxv.h>
+ #include <sys/utsname.h>
+ 
+ namespace libdnf5::utils {
+@@ -52,6 +52,7 @@ std::string detect_arch() {
+         throw RuntimeError(M_("Failed to execute uname()"));
+     }
+ 
++#ifndef __MVS__
+     if (!strncmp(un.machine, "armv", 4)) {
+         /* un.machine is armvXE, where X is version number and E is
+          * endianness (b or l); we need to add modifiers such as
+@@ -69,6 +70,7 @@ std::string detect_arch() {
+         *modifier++ = endian;
+         *modifier = 0;
+     }
++#endif
+ #ifdef __MIPSEL__
+     // support for little endian MIPS
+     if (!strcmp(un.machine, "mips"))

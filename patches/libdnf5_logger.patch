@@ -1,0 +1,28 @@
+diff --git a/libdnf5/logger/logger.cpp b/libdnf5/logger/logger.cpp
+index 38c8ff0..2d55b25 100644
+--- a/libdnf5/logger/logger.cpp
++++ b/libdnf5/logger/logger.cpp
+@@ -22,7 +22,6 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ #include <fmt/chrono.h>
+ 
+ #include <array>
+-
+ namespace libdnf5 {
+ 
+ namespace {
+@@ -56,9 +55,13 @@ void StringLogger::write(
+     Level level,
+     const std::string & message) noexcept {
+     try {
++        auto t = std::chrono::system_clock::to_time_t(time);
++        char buf[64];
++        std::strftime(buf, sizeof(buf), "%Y-%m-%dT%H:%M:%S%z", std::localtime(&t));
++        std::string timestr(buf);
+         write(fmt::format(
+-                  "{:%FT%T%z} [{}] {} {}\n",
+-                  std::chrono::time_point_cast<std::chrono::seconds>(time),
++                  "{} [{}] {} {}\n",
++                  timestr,
+                   pid,
+                   level_to_cstr(level),
+                   message)
