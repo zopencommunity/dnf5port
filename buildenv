@@ -27,7 +27,7 @@ export ZOPEN_DEV_DEPS=""  # Specify the dev build dependencies
 export ZOPEN_CATEGORIES="build_system"
 
 ## Runtime zopen tool dependencies to be installed alongside the tool.
-export ZOPEN_RUNTIME_DEPS=""
+export ZOPEN_RUNTIME_DEPS="rpm"
 
 ## Runtime system prerequisites; supply the name of the system pre-requisties.
 ## Current available prerequisites: zos24 zos25 zos31 procfs (see https://github.com/zopencommunity/meta/blob/main/include/prereq.sh for a current list)
@@ -111,6 +111,7 @@ zopen_append_to_zoslib_env(){
   ## which can be used to set environment variables before main is run.
 cat <<EOF
 LIBPATH|prepend|PROJECT_ROOT/lib/libdnf5/plugins/:PROJECT_ROOT/lib/dnf5/plugins/:PROJECT_ROOT/lib/
+RPM_CONFIGDIR|set|PROJECT_ROOT/../../rpm/rpm/lib/rpm/
 EOF
 }
 
