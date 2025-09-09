@@ -1,0 +1,13 @@
+diff --git a/test/data/repos-rpm/rpm-repo1/one-2-1.spec b/test/data/repos-rpm/rpm-repo1/one-2-1.spec
+index b7ab5d6..f66883c 100644
+--- a/test/data/repos-rpm/rpm-repo1/one-2-1.spec
++++ b/test/data/repos-rpm/rpm-repo1/one-2-1.spec
+@@ -8,7 +8,7 @@ License:        Public Domain
+ URL:            http://example.com/
+ 
+ Summary:        A dummy package
+-BuildArch:      noarch
++#BuildArch:      noarch
+ 
+ %description
+ A dummy package.

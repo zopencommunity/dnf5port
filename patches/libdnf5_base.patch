@@ -1,0 +1,53 @@
+diff --git a/libdnf5/base/base.cpp b/libdnf5/base/base.cpp
+index 5ac1139..0fa3230 100644
+--- a/libdnf5/base/base.cpp
++++ b/libdnf5/base/base.cpp
+@@ -48,6 +48,48 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ 
+ namespace fs = std::filesystem;
+ 
++#if defined(__MVS__)
++FILE *memstream_open(char **out_buf, size_t *out_len) {
++    if (!out_buf || !out_len) { errno = EINVAL; return NULL; }
++
++    char tmpl[] = "/tmp/memstream.XXXXXX";
++    int fd = mkstemp(tmpl);
++    if (fd == -1) return NULL;
++
++    unlink(tmpl);
++
++    FILE *fp = fdopen(fd, "w+");
++    if (!fp) { close(fd); return NULL; }
++
++    *out_buf = NULL;
++    *out_len = 0;
++    return fp;
++}
++
++int memstream_finish(FILE *fp, char **out_buf, size_t *out_len) {
++    if (!fp || !out_buf || !out_len) { errno = EINVAL; return -1; }
++
++    if (fflush(fp) != 0) return -1;
++
++    long end = ftell(fp);
++    if (end < 0) return -1;
++
++    if (fseek(fp, 0, SEEK_SET) != 0) return -1;
++
++    char *buf = (char *)malloc((size_t)end + 1);
++    if (!buf) return -1;
++
++    size_t got = fread(buf, 1, (size_t)end, fp);
++    if (got != (size_t)end) { free(buf); return -1; }
++
++    buf[got] = '\0';
++    *out_buf = buf;
++    *out_len = got;
++    return 0;
++}
++
++#endif
++
+ namespace libdnf5 {
+ 
+ static std::atomic<Base *> locked_base{nullptr};

@@ -16,7 +16,7 @@ export ZOPEN_BUILD_LINE="STABLE"
 
 ## Required IF ZOPEN_BUILD_LINE='STABLE'
 export ZOPEN_STABLE_URL="https://github.com/rpm-software-management/dnf5.git"  # Specify the stable build URL (either git or tarball)
-export ZOPEN_STABLE_DEPS="zoslib make curl cmake pkgconfig toml11 fmt jsonc libsolv rpm popt libxml2 librepo glib libpsl sqlite gettext bash-completion util-linux zlib bzip2 xz zstd lua libgcrypt libgpgme libgpgerror libassuan check_python" # Specify the stable build dependencies.
+export ZOPEN_STABLE_DEPS="zoslib make curl cmake pkgconfig toml11 fmt jsonc libsolv rpm popt libxml2 librepo glib libpsl sqlite gettext bash-completion util-linux zlib bzip2 xz zstd lua libgcrypt libgpgme libgpgerror libassuan check_python cppunit createrepo_c bash" # Specify the stable build dependencies.
 
 ## Required IF ZOPEN_BUILD_LINE='DEV'
 export ZOPEN_DEV_URL=""   # Specify the dev build URL
@@ -164,11 +164,11 @@ export ZOPEN_EXTRA_LDFLAGS="-mzos-hlq-le=CEE -mzos-hlq-clang=CEE" ## C,C++ linke
 #export ZOPEN_EXTRA_LIBS="" ## C,C++ libraries to append to LIBS (defaults to '')
 #export ZOPEN_BOOTSTRAP_OPTS="" ## Options to pass to bootstrap program (defaults to '')
 #export ZOPEN_CHECK_MINIMAL="" ## Check program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will get them from env vars.
-#export ZOPEN_CHECK_OPTS="" ## Options to pass to check program (defaults to 'check')
+export ZOPEN_CHECK_OPTS="-C ../build test" ## Options to pass to check program (defaults to 'check')
 #export ZOPEN_CHECK_TIMEOUT="" ## Timeout limit in seconds for the check program (defaults to '12600' # 3.5 hours)
 #export ZOPEN_CLEAN_OPTS="" ## Options to pass to clean up  program (defaults to 'clean')
 #export ZOPEN_CONFIGURE_MINIMAL="" ## Configuration program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will get them from env vars.
-export ZOPEN_CONFIGURE_OPTS="-B ../build --install-prefix \$ZOPEN_INSTALL_DIR/ -DCMAKE_INSTALL_PREFIX=\$ZOPEN_INSTALL_DIR/ -DCURL_LIBRARY=\"\$CURL_HOME/lib/libcurl.a\" -DCURL_INCLUDE_DIR=\"\$CURL_HOME/include\" -DZLIB_LIBRARY=\"\$ZLIB_HOME/lib/libz.a\" -DWITH_SYSTEMD=OFF -DWITH_DNF5DAEMON_CLIENT=OFF -DWITH_DNF5DAEMON_SERVER=OFF -DWITH_MODULEMD=OFF -DWITH_LIBDNF5_CLI=ON -DWITH_PLUGIN_APPSTREAM=OFF -DWITH_PYTHON_PLUGINS_LOADER=OFF -DWITH_PERL5=OFF -DWITH_PYTHON3=OFF -DWITH_RUBY=OFF -DWITH_TESTS=OFF -DWITH_MAN=OFF -DWITH_HTML=OFF" ## Options to pass to configuration program (defaults to '--prefix=')
+export ZOPEN_CONFIGURE_OPTS="-B ../build --install-prefix \$ZOPEN_INSTALL_DIR/ -DCMAKE_INSTALL_PREFIX=\$ZOPEN_INSTALL_DIR/ -DCURL_LIBRARY=\"\$CURL_HOME/lib/libcurl.a\" -DCURL_INCLUDE_DIR=\"\$CURL_HOME/include\" -DZLIB_LIBRARY=\"\$ZLIB_HOME/lib/libz.a\" -DWITH_SYSTEMD=OFF -DWITH_DNF5DAEMON_CLIENT=OFF -DWITH_DNF5DAEMON_SERVER=OFF -DWITH_MODULEMD=OFF -DWITH_LIBDNF5_CLI=ON -DWITH_PLUGIN_APPSTREAM=OFF -DWITH_PYTHON_PLUGINS_LOADER=OFF -DWITH_PERL5=OFF -DWITH_PYTHON3=OFF -DWITH_RUBY=OFF -DWITH_TESTS=ON -DWITH_MAN=OFF -DWITH_HTML=OFF" ## Options to pass to configuration program (defaults to '--prefix=')
 
 #export ZOPEN_EXTRA_CONFIGURE_OPTS="" ## Extra configure options to pass to configuration program. (defaults to '')
 export ZOPEN_INSTALL_OPTS="-C ../build install" ## Options to pass to installation program (defaults to 'install')

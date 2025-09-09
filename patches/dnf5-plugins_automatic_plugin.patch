@@ -12,60 +12,19 @@ index d0834cb..425afe6 100644
  install(TARGETS automatic_cmd_plugin LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/dnf5/plugins/)
  install(DIRECTORY "config/usr/" DESTINATION "${CMAKE_INSTALL_PREFIX}")
 diff --git a/dnf5-plugins/automatic_plugin/automatic.cpp b/dnf5-plugins/automatic_plugin/automatic.cpp
-index 020ec26..f4e7d44 100644
+index 020ec26..c0507da 100644
 --- a/dnf5-plugins/automatic_plugin/automatic.cpp
 +++ b/dnf5-plugins/automatic_plugin/automatic.cpp
-@@ -45,6 +45,49 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+@@ -45,6 +45,8 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
  #include <string>
  #include <thread>
  
-+
-+#if defined(__MVS__)
-+static FILE *memstream_open(char **out_buf, size_t *out_len) {
-+    if (!out_buf || !out_len) { errno = EINVAL; return NULL; }
-+
-+    char tmpl[] = "/tmp/memstream.XXXXXX";
-+    int fd = mkstemp(tmpl);
-+    if (fd == -1) return NULL;
-+
-+    unlink(tmpl);
-+
-+    FILE *fp = fdopen(fd, "w+");
-+    if (!fp) { close(fd); return NULL; }
-+
-+    *out_buf = NULL;
-+    *out_len = 0;
-+    return fp;
-+}
-+
-+static int memstream_finish(FILE *fp, char **out_buf, size_t *out_len) {
-+    if (!fp || !out_buf || !out_len) { errno = EINVAL; return -1; }
-+
-+    if (fflush(fp) != 0) return -1;
-+
-+    long end = ftell(fp);
-+    if (end < 0) return -1;
-+
-+    if (fseek(fp, 0, SEEK_SET) != 0) return -1;
-+
-+    char *buf = (char *)malloc((size_t)end + 1);
-+    if (!buf) return -1;
-+
-+    size_t got = fread(buf, 1, (size_t)end, fp);
-+    if (got != (size_t)end) { free(buf); return -1; }
-+
-+    buf[got] = '\0';
-+    *out_buf = buf;
-+    *out_len = got;
-+    return 0;
-+}
-+
-+#endif
++#include "libdnf5/base/base.hpp"
 +
  namespace {
  
  /// Sleep for random number of seconds in interval <0, max_value>
-@@ -360,7 +403,11 @@ void AutomaticCommand::run() {
+@@ -360,7 +362,11 @@ void AutomaticCommand::run() {
          if (!transaction.empty()) {
              char * tt_string;
              size_t size;
@@ -77,7 +36,7 @@ index 020ec26..f4e7d44 100644
              {
                  libdnf5::cli::output::TransactionTable table(
                      static_cast<libdnf5::cli::output::ITransaction &>(cli_output_transaction));
-@@ -370,6 +417,9 @@ void AutomaticCommand::run() {
+@@ -370,6 +376,9 @@ void AutomaticCommand::run() {
                  table.print_table();
                  table.print_summary();
              }
