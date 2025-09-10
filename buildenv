@@ -42,7 +42,7 @@ export ZOPEN_COMP=OPENXL
 ###
 
 #export ZOPEN_BOOTSTRAP="skip" ## Bootstrap program to run (defaults to './bootstrap')
-#export ZOPEN_CHECK="skip"     ## Check program to run (defaults to 'make')
+export ZOPEN_CHECK="zopen_check"     ## Check program to run (defaults to 'make')
 export ZOPEN_CONFIGURE="cmake" ## Configuration program to run (defaults to './configure')
 #export ZOPEN_INSTALL="skip"   ## Installation program to run (defaults to 'make')
 #export ZOPEN_MAKE="skip"      ## Build program to run (defaults to 'make')
@@ -52,6 +52,11 @@ export ZOPEN_CONFIGURE="cmake" ## Configuration program to run (defaults to './c
 ###
 ### Required user-supplied functions
 ###
+
+zopen_check()
+{
+  RPM_CONFIGDIR=${RPM_HOME}/lib/rpm make -C ../build test
+}
 
 zopen_check_results()
 {
@@ -115,10 +120,10 @@ RPM_CONFIGDIR|set|PROJECT_ROOT/../../rpm/rpm/lib/rpm/
 EOF
 }
 
-zopen_init(){
+#zopen_init(){
   ## This function runs after code is downloaded and patched but before the code
   ## is built.
-}
+#}
 
 #zopen_post_buildenv(){
   ## This function runs after the 'buildenv' is processed.
@@ -164,7 +169,7 @@ export ZOPEN_EXTRA_LDFLAGS="-mzos-hlq-le=CEE -mzos-hlq-clang=CEE" ## C,C++ linke
 #export ZOPEN_EXTRA_LIBS="" ## C,C++ libraries to append to LIBS (defaults to '')
 #export ZOPEN_BOOTSTRAP_OPTS="" ## Options to pass to bootstrap program (defaults to '')
 #export ZOPEN_CHECK_MINIMAL="" ## Check program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will get them from env vars.
-export ZOPEN_CHECK_OPTS="-C ../build test" ## Options to pass to check program (defaults to 'check')
+#export ZOPEN_CHECK_OPTS="-C ../build test" ## Options to pass to check program (defaults to 'check')
 #export ZOPEN_CHECK_TIMEOUT="" ## Timeout limit in seconds for the check program (defaults to '12600' # 3.5 hours)
 #export ZOPEN_CLEAN_OPTS="" ## Options to pass to clean up  program (defaults to 'clean')
 #export ZOPEN_CONFIGURE_MINIMAL="" ## Configuration program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will get them from env vars.
