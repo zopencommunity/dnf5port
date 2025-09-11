@@ -11,6 +11,58 @@ index b2a5052..e864d8b 100644
  namespace libdnf5::utils {
  
  Library::Library(const std::string & path) : path(path) {
+diff --git a/libdnf5/utils/os_release.cpp b/libdnf5/utils/os_release.cpp
+index e7b5622..2066082 100644
+--- a/libdnf5/utils/os_release.cpp
++++ b/libdnf5/utils/os_release.cpp
+@@ -22,6 +22,8 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ #include <filesystem>
+ #include <fstream>
+ #include <regex>
++#include <iostream>
++#include <stdio.h>
+ 
+ namespace libdnf5::utils {
+ 
+@@ -41,27 +43,30 @@ bool OSRelease::contains(const std::string & key) {
+ void OSRelease::initialize() {
+     if (initialized_)
+         return;
+-
+     initialized_ = true;
+-    std::ifstream infile(path);
+-    if (!std::filesystem::exists(path))
+-        return;
++    char *line = NULL;
++    size_t len = 0;
++    ssize_t read;
++
++    FILE *fp = fopen(path.string().c_str(), "r");
++    if (!fp) return;
+ 
+     const std::regex r_no_quotes("^([A-Z_]+)=(\\w+)");
+     const std::regex r_quotes("^([A-Z_]+)=\"(.+)\"");
+     std::smatch match;
+-    std::string line;
+ 
+-    while (std::getline(infile, line)) {
+-        if (std::regex_match(line, match, r_no_quotes)) {
++    while ((read = getline(&line, &len, fp)) != -1) {
++        std::string line_s(line, read-1);
++        if (std::regex_match(line_s, match, r_no_quotes)) {
+             map[match[1]] = match[2];
+             continue;
+         }
+-        if (std::regex_match(line, match, r_quotes)) {
++        if (std::regex_match(line_s, match, r_quotes)) {
+             map[match[1]] = match[2];
+             continue;
+         }
+     }
++    fclose(fp);
+ }
+ 
+ }  // namespace libdnf5::utils
 diff --git a/libdnf5/utils/system.cpp b/libdnf5/utils/system.cpp
 index 89c1130..a2a2a3d 100644
 --- a/libdnf5/utils/system.cpp

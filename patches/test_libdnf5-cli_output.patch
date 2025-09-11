@@ -1,8 +1,8 @@
 diff --git a/test/libdnf5-cli/output/test_repoquery.cpp b/test/libdnf5-cli/output/test_repoquery.cpp
-index 30a3a26..129ecb3 100644
+index 30a3a26..99231db 100644
 --- a/test/libdnf5-cli/output/test_repoquery.cpp
 +++ b/test/libdnf5-cli/output/test_repoquery.cpp
-@@ -42,14 +42,22 @@ namespace {
+@@ -42,13 +42,20 @@ namespace {
  class MemStream {
  public:
      MemStream() {
@@ -18,10 +18,8 @@ index 30a3a26..129ecb3 100644
  
      ~MemStream() {
 +#ifdef __MVS__
-         CPPUNIT_ASSERT_EQUAL(fclose(stream), 0);
-+#else
-+        CPPUNIT_ASSERT_EQUAL(memstream_finish(stream, &buf, &len), 0);
++        memstream_finish(stream, &buf, &len);
 +#endif
+         CPPUNIT_ASSERT_EQUAL(fclose(stream), 0);
          free(buf);
      }
- 
