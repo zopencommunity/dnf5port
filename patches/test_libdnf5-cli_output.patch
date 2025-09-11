@@ -1,0 +1,25 @@
+diff --git a/test/libdnf5-cli/output/test_repoquery.cpp b/test/libdnf5-cli/output/test_repoquery.cpp
+index 30a3a26..99231db 100644
+--- a/test/libdnf5-cli/output/test_repoquery.cpp
++++ b/test/libdnf5-cli/output/test_repoquery.cpp
+@@ -42,13 +42,20 @@ namespace {
+ class MemStream {
+ public:
+     MemStream() {
++#ifdef __MVS__
++        stream = memstream_open(&buf, &len);
++#else
+         stream = open_memstream(&buf, &len);
++#endif
+         if (!stream) {
+             throw std::system_error(errno, std::system_category(), "open_memstream");
+         }
+     }
+ 
+     ~MemStream() {
++#ifdef __MVS__
++        memstream_finish(stream, &buf, &len);
++#endif
+         CPPUNIT_ASSERT_EQUAL(fclose(stream), 0);
+         free(buf);
+     }

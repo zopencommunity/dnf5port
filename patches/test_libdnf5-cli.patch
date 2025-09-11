@@ -1,0 +1,24 @@
+diff --git a/test/libdnf5-cli/run_tests.cpp b/test/libdnf5-cli/run_tests.cpp
+index 310e2c1..c406608 100644
+--- a/test/libdnf5-cli/run_tests.cpp
++++ b/test/libdnf5-cli/run_tests.cpp
+@@ -31,16 +31,16 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ 
+ class TimingListener : public CppUnit::TestListener {
+ public:
+-    void startTest(CppUnit::Test *) override { start = std::chrono::high_resolution_clock::now(); }
++    void startTest(CppUnit::Test *) override { start = std::chrono::system_clock::now(); }
+ 
+     void endTest(CppUnit::Test *) override {
+-        auto end = std::chrono::high_resolution_clock::now();
++        auto end = std::chrono::system_clock::now();
+         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+         std::cout << " (duration: " << duration << "ms)";
+     }
+ 
+ private:
+-    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::from_time_t(0);
++    std::chrono::system_clock::time_point start = std::chrono::system_clock::from_time_t(0);
+ };
+ 
+ 

@@ -1,0 +1,21 @@
+diff --git a/libdnf5/CMakeLists.txt b/libdnf5/CMakeLists.txt
+index 257a248..4b8c0b9 100644
+--- a/libdnf5/CMakeLists.txt
++++ b/libdnf5/CMakeLists.txt
+@@ -41,7 +41,7 @@ add_library(libdnf5_iface INTERFACE)
+ target_link_libraries(libdnf5_iface INTERFACE libdnf5_obj $<TARGET_OBJECTS:libdnf5_obj>)
+ 
+ # build libdnf5.so
+-add_library(libdnf5 SHARED $<TARGET_OBJECTS:libdnf5_obj>)
++add_library(libdnf5 STATIC $<TARGET_OBJECTS:libdnf5_obj>)
+ set(DNF_SO_VERSION 2)
+ set_target_properties(libdnf5 PROPERTIES OUTPUT_NAME "dnf5")
+ set_target_properties(libdnf5 PROPERTIES SOVERSION ${DNF_SO_VERSION})
+@@ -53,6 +53,7 @@ target_link_libraries(libdnf5 PUBLIC stdc++)
+ 
+ # install libdnf5.so
+ install(TARGETS libdnf5 LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
++#install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/libdnf5.so DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
+ 
+ target_link_libraries(libdnf5 PRIVATE common_obj)
+ target_link_libraries(libdnf5_iface INTERFACE $<TARGET_OBJECTS:common_obj>)

@@ -1,0 +1,20 @@
+diff --git a/dnf5-plugins/CMakeLists.txt b/dnf5-plugins/CMakeLists.txt
+index bf3b141..c01191a 100644
+--- a/dnf5-plugins/CMakeLists.txt
++++ b/dnf5-plugins/CMakeLists.txt
+@@ -8,13 +8,13 @@ set(CMAKE_C_VISIBILITY_PRESET hidden)
+ include_directories("${PROJECT_SOURCE_DIR}/dnf5/include/")
+ # These plugins use symbols from dnf5 program, hence the symbold are undefined
+ # at link time and cannot pass "-z defs" linker check. Disable the check.
+-set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,-z,undefs")
++#set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,-z,undefs")
+ 
+ add_subdirectory("automatic_plugin")
+ add_subdirectory("builddep_plugin")
+ add_subdirectory("changelog_plugin")
+ add_subdirectory("config-manager_plugin")
+ add_subdirectory("copr_plugin")
+-add_subdirectory("needs_restarting_plugin")
++#add_subdirectory("needs_restarting_plugin")
+ add_subdirectory("repoclosure_plugin")
+ add_subdirectory("reposync_plugin")

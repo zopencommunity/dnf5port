@@ -1,0 +1,13 @@
+diff --git a/dnf5-plugins/repoclosure_plugin/CMakeLists.txt b/dnf5-plugins/repoclosure_plugin/CMakeLists.txt
+index 119a211..2691a15 100644
+--- a/dnf5-plugins/repoclosure_plugin/CMakeLists.txt
++++ b/dnf5-plugins/repoclosure_plugin/CMakeLists.txt
+@@ -8,7 +8,7 @@ add_library(repoclosure_cmd_plugin MODULE repoclosure.cpp repoclosure_cmd_plugin
+ set_target_properties(repoclosure_cmd_plugin PROPERTIES PREFIX "")
+ 
+ target_link_libraries(repoclosure_cmd_plugin PRIVATE libdnf5 libdnf5-cli)
+-target_link_libraries(repoclosure_cmd_plugin PRIVATE dnf5)
++target_link_libraries(repoclosure_cmd_plugin PRIVATE dnf5_core)
+ 
+ install(TARGETS repoclosure_cmd_plugin LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/dnf5/plugins/)
+ 

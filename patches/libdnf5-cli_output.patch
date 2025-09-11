@@ -1,0 +1,21 @@
+diff --git a/libdnf5-cli/output/transactioninfo.cpp b/libdnf5-cli/output/transactioninfo.cpp
+index 276f741..c9749c5 100644
+--- a/libdnf5-cli/output/transactioninfo.cpp
++++ b/libdnf5-cli/output/transactioninfo.cpp
+@@ -42,6 +42,7 @@ std::string generate_user_info_str(uint32_t user_id) {
+         return results;
+     };
+ 
++#ifndef __MVS__
+     // If gecos information does exists, it is generally CSV formatted.
+     // This section assumes that the first entry in the gecos information is the display name.
+     if (user_info->pw_gecos && strlen(user_info->pw_gecos) > 0) {
+@@ -50,7 +51,7 @@ std::string generate_user_info_str(uint32_t user_id) {
+         std::getline(s_stream, display_name, ',');
+         results += fmt::format(" {}", display_name);
+     };
+-
++#endif
+     if (user_info->pw_name && strlen(user_info->pw_name) > 0) {
+         results += fmt::format(" <{}>", user_info->pw_name);
+     };
