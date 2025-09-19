@@ -59,6 +59,47 @@ index 316fb70..733df1c 100644
  namespace dnf5 {
  
  void ConfigAutomatic::load_from_parser(
+diff --git a/dnf5-plugins/automatic_plugin/email_message.cpp b/dnf5-plugins/automatic_plugin/email_message.cpp
+index 8168ae8..44eab8a 100644
+--- a/dnf5-plugins/automatic_plugin/email_message.cpp
++++ b/dnf5-plugins/automatic_plugin/email_message.cpp
+@@ -43,10 +43,35 @@ void EmailMessage::set_body(std::stringstream & body) {
+     }
+ }
+ 
++static inline std::string get_tz_offset(const std::time_t &t) {
++   struct tm local_tm;
++   localtime_r(&t, &local_tm);
++
++   struct tm utc_tm;
++   gmtime_r(&t, &utc_tm);
++
++   time_t local_sec = mktime(&local_tm);
++   time_t utc_sec = mktime(&utc_tm);
++   long offset = static_cast<long>(difftime(local_sec, utc_sec));
++
++   // Compute sign, hours, and minutes
++   char tzbuf[16];
++   char sign = (offset >= 0) ? '+' : '-';
++   offset = std::labs(offset);
++   int hours = offset / 3600;
++   int mins = (offset % 3600) / 60;
++
++   std::snprintf(tzbuf, sizeof(tzbuf), "%c%02d%02d", sign, hours, mins);
++
++   return std::string(tzbuf);
++}
++
+ std::string EmailMessage::str() {
+     // RFC 5322 requires dates with integral seconds.
+     const auto now = std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::system_clock::now());
+-    std::string date = fmt::format("{:%a, %d %b %Y %H:%M:%S %z}", now);
++    std::string date = fmt::format("{:%a, %d %b %Y %H:%M:%S}", now);
++    auto t = std::chrono::system_clock::to_time_t(now);
++    date = date + " " + get_tz_offset(t);
+ 
+     std::string to_str;
+     for (const auto & eml : to) {
 diff --git a/dnf5-plugins/automatic_plugin/emitters.cpp b/dnf5-plugins/automatic_plugin/emitters.cpp
 index 3965ec4..bf7c6dc 100644
 --- a/dnf5-plugins/automatic_plugin/emitters.cpp

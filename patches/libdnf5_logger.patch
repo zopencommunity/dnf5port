@@ -1,5 +1,5 @@
 diff --git a/libdnf5/logger/logger.cpp b/libdnf5/logger/logger.cpp
-index 38c8ff0..2d55b25 100644
+index 38c8ff0..f401a41 100644
 --- a/libdnf5/logger/logger.cpp
 +++ b/libdnf5/logger/logger.cpp
 @@ -22,7 +22,6 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
@@ -10,14 +10,44 @@ index 38c8ff0..2d55b25 100644
  namespace libdnf5 {
  
  namespace {
-@@ -56,9 +55,13 @@ void StringLogger::write(
+@@ -45,6 +44,29 @@ void Logger::log_line(Level level, const std::string & message) noexcept {
+     write(std::chrono::system_clock::now(), getpid(), level, message);
+ }
+ 
++static inline std::string get_tz_offset(const std::time_t &t) {
++    struct tm local_tm;
++    localtime_r(&t, &local_tm);
++
++    struct tm utc_tm;
++    gmtime_r(&t, &utc_tm);
++
++    time_t local_sec = mktime(&local_tm);
++    time_t utc_sec = mktime(&utc_tm);
++    long offset = static_cast<long>(difftime(local_sec, utc_sec));
++
++    // Compute sign, hours, and minutes
++    char tzbuf[16];
++    char sign = (offset >= 0) ? '+' : '-';
++    offset = std::labs(offset);
++    int hours = offset / 3600;
++    int mins = (offset % 3600) / 60;
++
++    std::snprintf(tzbuf, sizeof(tzbuf), "%c%02d%02d", sign, hours, mins);
++
++    return std::string(tzbuf);
++}
++
+ 
+ StringLogger::StringLogger() = default;
+ 
+@@ -56,9 +78,13 @@ void StringLogger::write(
      Level level,
      const std::string & message) noexcept {
      try {
 +        auto t = std::chrono::system_clock::to_time_t(time);
 +        char buf[64];
-+        std::strftime(buf, sizeof(buf), "%Y-%m-%dT%H:%M:%S%z", std::localtime(&t));
-+        std::string timestr(buf);
++        std::strftime(buf, sizeof(buf), "%Y-%m-%dT%H:%M:%S", std::localtime(&t));
++        std::string timestr = std::string(buf) + get_tz_offset(t);
          write(fmt::format(
 -                  "{:%FT%T%z} [{}] {} {}\n",
 -                  std::chrono::time_point_cast<std::chrono::seconds>(time),

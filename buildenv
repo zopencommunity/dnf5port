@@ -16,7 +16,7 @@ export ZOPEN_BUILD_LINE="STABLE"
 
 ## Required IF ZOPEN_BUILD_LINE='STABLE'
 export ZOPEN_STABLE_URL="https://github.com/rpm-software-management/dnf5.git"  # Specify the stable build URL (either git or tarball)
-export ZOPEN_STABLE_DEPS="zoslib make curl cmake pkgconfig toml11 fmt jsonc libsolv rpm popt libxml2 librepo glib libpsl sqlite gettext bash-completion util-linux zlib bzip2 xz zstd lua libgcrypt libgpgme libgpgerror libassuan check_python cppunit createrepo_c bash" # Specify the stable build dependencies.
+export ZOPEN_STABLE_DEPS="zoslib make curl cmake pkgconfig toml11 fmt jsonc libsolv rpm popt libxml2 librepo glib libpsl sqlite gettext bash-completion util-linux zlib bzip2 xz zstd lua libgcrypt libgpgme libgpgerror libassuan check_python cppunit createrepo_c bash gawk grep" # Specify the stable build dependencies.
 
 ## Required IF ZOPEN_BUILD_LINE='DEV'
 export ZOPEN_DEV_URL=""   # Specify the dev build URL
@@ -64,11 +64,13 @@ zopen_check_results()
   pfx="$2"
   chk="$1/$2_check.log"
 
-  # Echo the following information to gauge build health
-  echo "actualFailures:0"
-  echo "totalTests:1"
-  echo "expectedFailures:0"
-  echo "expectedTotalTests:1"
+  actualFailures=$(grep -E '^[[:space:]]*[0-9]+/[0-9]+[[:space:]]+Test[[:space:]]+#' $chk | awk '$(NF-2) ~ /\*\*\*Failed/ { count++ } END { print count+0 }')
+  actualPasses=$(grep -E '^[[:space:]]*[0-9]+/[0-9]+[[:space:]]+Test[[:space:]]+#' $chk | awk '$(NF-2) == "Passed" { count++ } END { print count+0 }')
+  totalTests=$(grep -E '^[[:space:]]*[0-9]+/[0-9]+[[:space:]]+Test[[:space:]]+#' $chk | wc -l)
+  echo "actualFailures:$actualFailures"
+  echo "totalTests:$totalTests"
+  echo "expectedFailures:1"
+  echo "expectedTotalTests:5"
 }
 
 zopen_get_version()
