@@ -1,0 +1,21 @@
+diff --git a/test/libdnf5/logger/test_file_logger.cpp b/test/libdnf5/logger/test_file_logger.cpp
+index 3303ad5..6ca5da3 100644
+--- a/test/libdnf5/logger/test_file_logger.cpp
++++ b/test/libdnf5/logger/test_file_logger.cpp
+@@ -22,6 +22,7 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ 
+ #include <libdnf5/logger/factory.hpp>
+ 
++#include <zos-filesystem.h>
+ 
+ using namespace std::filesystem;
+ 
+@@ -44,7 +45,7 @@ void FileLoggerTest::setUp() {
+ 
+ void FileLoggerTest::tearDown() {
+     BaseTestCase::tearDown();
+-    remove_all(full_log_path.parent_path());
++    portable_remove_all(full_log_path.parent_path());
+ }
+ 
+ 

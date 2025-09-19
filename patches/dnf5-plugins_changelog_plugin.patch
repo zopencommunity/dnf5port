@@ -1,0 +1,13 @@
+diff --git a/dnf5-plugins/changelog_plugin/CMakeLists.txt b/dnf5-plugins/changelog_plugin/CMakeLists.txt
+index 9b4a553..c02ae2f 100644
+--- a/dnf5-plugins/changelog_plugin/CMakeLists.txt
++++ b/dnf5-plugins/changelog_plugin/CMakeLists.txt
+@@ -8,7 +8,7 @@ add_library(changelog_cmd_plugin MODULE changelog.cpp changelog_cmd_plugin.cpp)
+ set_target_properties(changelog_cmd_plugin PROPERTIES PREFIX "")
+ 
+ target_link_libraries(changelog_cmd_plugin PRIVATE libdnf5 libdnf5-cli)
+-target_link_libraries(changelog_cmd_plugin PRIVATE dnf5)
++target_link_libraries(changelog_cmd_plugin PRIVATE dnf5_core)
+ 
+ install(TARGETS changelog_cmd_plugin LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/dnf5/plugins/)
+ 

@@ -1,0 +1,13 @@
+diff --git a/test/libdnf5/utils/test_fs.cpp b/test/libdnf5/utils/test_fs.cpp
+index 65819db..2da13df 100644
+--- a/test/libdnf5/utils/test_fs.cpp
++++ b/test/libdnf5/utils/test_fs.cpp
+@@ -26,7 +26,7 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ #include <libdnf5/common/exception.hpp>
+ 
+ #include <filesystem>
+-
++#include <unistd.h>
+ 
+ using namespace libdnf5::utils::fs;
+ namespace stdfs = std::filesystem;

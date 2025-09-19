@@ -1,0 +1,40 @@
+diff --git a/libdnf5/CMakeLists.txt b/libdnf5/CMakeLists.txt
+index 257a248..48a360a 100644
+--- a/libdnf5/CMakeLists.txt
++++ b/libdnf5/CMakeLists.txt
+@@ -41,7 +41,7 @@ add_library(libdnf5_iface INTERFACE)
+ target_link_libraries(libdnf5_iface INTERFACE libdnf5_obj $<TARGET_OBJECTS:libdnf5_obj>)
+ 
+ # build libdnf5.so
+-add_library(libdnf5 SHARED $<TARGET_OBJECTS:libdnf5_obj>)
++add_library(libdnf5 STATIC $<TARGET_OBJECTS:libdnf5_obj>)
+ set(DNF_SO_VERSION 2)
+ set_target_properties(libdnf5 PROPERTIES OUTPUT_NAME "dnf5")
+ set_target_properties(libdnf5 PROPERTIES SOVERSION ${DNF_SO_VERSION})
+@@ -53,6 +53,7 @@ target_link_libraries(libdnf5 PUBLIC stdc++)
+ 
+ # install libdnf5.so
+ install(TARGETS libdnf5 LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
++#install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/libdnf5.so DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
+ 
+ target_link_libraries(libdnf5 PRIVATE common_obj)
+ target_link_libraries(libdnf5_iface INTERFACE $<TARGET_OBJECTS:common_obj>)
+@@ -64,10 +65,14 @@ if (toml11_VERSION VERSION_LESS 4.0.0)
+     add_definitions(-DTOML11_COMPAT)
+ endif()
+ 
+-pkg_check_modules(LIBFMT REQUIRED fmt)
+-list(APPEND LIBDNF5_PC_REQUIRES "${LIBFMT_MODULE_NAME}")
+-target_link_libraries(libdnf5 PUBLIC ${LIBFMT_LIBRARIES})
+-target_link_libraries(libdnf5_iface INTERFACE ${LIBFMT_LIBRARIES})
++#pkg_check_modules(LIBFMT REQUIRED fmt)
++#list(APPEND LIBDNF5_PC_REQUIRES "${LIBFMT_MODULE_NAME}")
++#target_link_libraries(libdnf5 PUBLIC ${LIBFMT_LIBRARIES})
++#target_link_libraries(libdnf5_iface INTERFACE ${LIBFMT_LIBRARIES})
++find_package(fmt REQUIRED)
++target_link_libraries(libdnf5 PUBLIC fmt::fmt-header-only)
++target_link_libraries(libdnf5_iface INTERFACE fmt::fmt-header-only)
++
+ 
+ pkg_check_modules(JSONC REQUIRED json-c)
+ include_directories(${JSONC_INCLUDE_DIRS})

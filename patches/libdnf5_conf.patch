@@ -1,0 +1,25 @@
+diff --git a/libdnf5/conf/config_utils.cpp b/libdnf5/conf/config_utils.cpp
+index 68037ab..07561e2 100644
+--- a/libdnf5/conf/config_utils.cpp
++++ b/libdnf5/conf/config_utils.cpp
+@@ -23,6 +23,7 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ 
+ #include <glob.h>
+ 
++#include <sstream>
+ 
+ namespace libdnf5 {
+ 
+diff --git a/libdnf5/conf/vars.cpp b/libdnf5/conf/vars.cpp
+index 8e9e0ed..c2269b8 100644
+--- a/libdnf5/conf/vars.cpp
++++ b/libdnf5/conf/vars.cpp
+@@ -34,7 +34,7 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ #include <rpm/rpmmacro.h>
+ #include <rpm/rpmts.h>
+ #include <stdlib.h>
+-#include <sys/auxv.h>
++//#include <sys/auxv.h>
+ #include <sys/types.h>
+ #include <sys/utsname.h>
+ 
