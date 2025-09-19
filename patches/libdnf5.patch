@@ -1,5 +1,5 @@
 diff --git a/libdnf5/CMakeLists.txt b/libdnf5/CMakeLists.txt
-index 257a248..4b8c0b9 100644
+index 257a248..48a360a 100644
 --- a/libdnf5/CMakeLists.txt
 +++ b/libdnf5/CMakeLists.txt
 @@ -41,7 +41,7 @@ add_library(libdnf5_iface INTERFACE)
@@ -19,3 +19,22 @@ index 257a248..4b8c0b9 100644
  
  target_link_libraries(libdnf5 PRIVATE common_obj)
  target_link_libraries(libdnf5_iface INTERFACE $<TARGET_OBJECTS:common_obj>)
+@@ -64,10 +65,14 @@ if (toml11_VERSION VERSION_LESS 4.0.0)
+     add_definitions(-DTOML11_COMPAT)
+ endif()
+ 
+-pkg_check_modules(LIBFMT REQUIRED fmt)
+-list(APPEND LIBDNF5_PC_REQUIRES "${LIBFMT_MODULE_NAME}")
+-target_link_libraries(libdnf5 PUBLIC ${LIBFMT_LIBRARIES})
+-target_link_libraries(libdnf5_iface INTERFACE ${LIBFMT_LIBRARIES})
++#pkg_check_modules(LIBFMT REQUIRED fmt)
++#list(APPEND LIBDNF5_PC_REQUIRES "${LIBFMT_MODULE_NAME}")
++#target_link_libraries(libdnf5 PUBLIC ${LIBFMT_LIBRARIES})
++#target_link_libraries(libdnf5_iface INTERFACE ${LIBFMT_LIBRARIES})
++find_package(fmt REQUIRED)
++target_link_libraries(libdnf5 PUBLIC fmt::fmt-header-only)
++target_link_libraries(libdnf5_iface INTERFACE fmt::fmt-header-only)
++
+ 
+ pkg_check_modules(JSONC REQUIRED json-c)
+ include_directories(${JSONC_INCLUDE_DIRS})
