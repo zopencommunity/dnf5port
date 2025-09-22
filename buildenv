@@ -56,6 +56,7 @@ export ZOPEN_CONFIGURE="cmake" ## Configuration program to run (defaults to './c
 zopen_check()
 {
   RPM_CONFIGDIR=${RPM_HOME}/lib/rpm make -C ../build test
+  cat ../build/Testing/Temporary/LastTest.log
 }
 
 zopen_check_results()
