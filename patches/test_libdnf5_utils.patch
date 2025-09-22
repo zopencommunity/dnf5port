@@ -1,5 +1,5 @@
 diff --git a/test/libdnf5/utils/test_fs.cpp b/test/libdnf5/utils/test_fs.cpp
-index 65819db..2da13df 100644
+index 65819db..ecb5263 100644
 --- a/test/libdnf5/utils/test_fs.cpp
 +++ b/test/libdnf5/utils/test_fs.cpp
 @@ -26,7 +26,7 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
@@ -11,3 +11,17 @@ index 65819db..2da13df 100644
  
  using namespace libdnf5::utils::fs;
  namespace stdfs = std::filesystem;
+@@ -62,7 +62,12 @@ void UtilsFsTest::test_temp_dir() {
+         libdnf5::utils::fs::TempDir temp_dir("libdnf_unittest_temp_dir");
+         path = temp_dir.get_path();
+ 
+-        CPPUNIT_ASSERT(path.native().starts_with("/tmp/libdnf_unittest_temp_dir."));
++        std::string tmpdir = "/tmp";
++        if (const char *env_tmp = std::getenv("TMPDIR")) {
++            tmpdir = env_tmp;
++        }
++
++        CPPUNIT_ASSERT(path.native().starts_with(tmpdir + "/libdnf_unittest_temp_dir."));
+         CPPUNIT_ASSERT(stdfs::exists(path));
+         CPPUNIT_ASSERT_EQUAL(stdfs::status(path).type(), stdfs::file_type::directory);
+     }
