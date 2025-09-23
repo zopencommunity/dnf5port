@@ -1,0 +1,52 @@
+diff --git a/dnf5/CMakeLists.txt b/dnf5/CMakeLists.txt
+index d1438d3..04ce20c 100644
+--- a/dnf5/CMakeLists.txt
++++ b/dnf5/CMakeLists.txt
+@@ -35,13 +35,20 @@ include_directories(.)
+ add_executable(dnf5 ${DNF5_SOURCES})
+ 
+ # Enable symbol export. Needed for loadable modules (dnf5 plugins).
+-set_property(TARGET dnf5 PROPERTY ENABLE_EXPORTS 1)
++#set_property(TARGET dnf5 PROPERTY ENABLE_EXPORTS 1)
+ # Export only explicitly marked symbols.
+ set_target_properties(dnf5 PROPERTIES C_VISIBILITY_PRESET hidden CXX_VISIBILITY_PRESET hidden)
+-
+ target_link_libraries(dnf5 PRIVATE common_obj libdnf5 libdnf5-cli Threads::Threads)
+-install(TARGETS dnf5 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+ 
++# Build a separate shared library from the same sources
++add_library(dnf5_core STATIC ${DNF5_SOURCES})
++set_target_properties(dnf5_core PROPERTIES OUTPUT_NAME "dnf5_core")
++target_compile_options(dnf5_core PRIVATE -fvisibility=default)
++target_link_libraries(dnf5_core PRIVATE common_obj libdnf5 libdnf5-cli Threads::Threads)
++
++install(TARGETS dnf5 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++install(TARGETS dnf5_core LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
++#install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/libdnf5_core.so DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
+ pkg_check_modules(RPM REQUIRED rpm>=4.17.0)
+ 
+ if(WITH_SYSTEMD)
+diff --git a/dnf5/context.cpp b/dnf5/context.cpp
+index 9986849..6d7099c 100644
+--- a/dnf5/context.cpp
++++ b/dnf5/context.cpp
+@@ -52,6 +52,8 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ #include <tuple>
+ #include <utility>
+ 
++#include <zos-filesystem.h>
++
+ namespace fs = std::filesystem;
+ 
+ namespace dnf5 {
+@@ -447,8 +449,8 @@ void Context::Impl::download_and_run(libdnf5::base::Transaction & transaction) {
+                 _("Location \"{}\" already contains a stored transaction, it will be overwritten."),
+                 transaction_store_path.string()));
+             if (libdnf5::cli::utils::userconfirm::userconfirm(base.get_config())) {
+-                std::filesystem::remove_all(packages_location);
+-                std::filesystem::remove_all(comps_location);
++                portable_remove_all(packages_location);
++                portable_remove_all(comps_location);
+             } else {
+                 throw libdnf5::cli::AbortedByUserError();
+             }

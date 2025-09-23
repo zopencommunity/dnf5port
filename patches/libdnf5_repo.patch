@@ -1,0 +1,22 @@
+diff --git a/libdnf5/repo/repo_downloader.cpp b/libdnf5/repo/repo_downloader.cpp
+index 304066c..0d5e80f 100644
+--- a/libdnf5/repo/repo_downloader.cpp
++++ b/libdnf5/repo/repo_downloader.cpp
+@@ -38,6 +38,8 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ #include <fstream>
+ #include <random>
+ 
++#include <zos-filesystem.h>
++
+ #define RECOGNIZED_CHKSUMS {"sha512", "sha256"}
+ 
+ namespace libdnf5::repo {
+@@ -73,7 +75,7 @@ int RepoDownloader::end_cb_full_download(void * data, LrTransferStatus status, c
+             auto tmp_item = dir.path();
+ 
+             auto target_item = download_callback_data->destination / tmp_item.filename();
+-            std::filesystem::remove_all(target_item);
++            portable_remove_all(target_item);
+ 
+             utils::fs::move_recursive(tmp_item, target_item);
+         }

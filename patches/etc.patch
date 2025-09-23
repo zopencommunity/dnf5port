@@ -1,0 +1,7 @@
+diff --git a/etc/CMakeLists.txt b/etc/CMakeLists.txt
+index 534840c..92f19d2 100644
+--- a/etc/CMakeLists.txt
++++ b/etc/CMakeLists.txt
+@@ -1 +1 @@
+-add_subdirectory("systemd")
++#add_subdirectory("systemd")

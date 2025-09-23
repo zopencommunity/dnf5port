@@ -1,0 +1,140 @@
+diff --git a/dnf5-plugins/automatic_plugin/CMakeLists.txt b/dnf5-plugins/automatic_plugin/CMakeLists.txt
+index d0834cb..425afe6 100644
+--- a/dnf5-plugins/automatic_plugin/CMakeLists.txt
++++ b/dnf5-plugins/automatic_plugin/CMakeLists.txt
+@@ -9,7 +9,7 @@ add_library(automatic_cmd_plugin MODULE ${AUTOMATIC_SOURCES})
+ set_target_properties(automatic_cmd_plugin PROPERTIES PREFIX "")
+ 
+ target_link_libraries(automatic_cmd_plugin PRIVATE libdnf5 libdnf5-cli)
+-target_link_libraries(automatic_cmd_plugin PRIVATE dnf5)
++target_link_libraries(automatic_cmd_plugin PRIVATE dnf5_core)
+ 
+ install(TARGETS automatic_cmd_plugin LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/dnf5/plugins/)
+ install(DIRECTORY "config/usr/" DESTINATION "${CMAKE_INSTALL_PREFIX}")
+diff --git a/dnf5-plugins/automatic_plugin/automatic.cpp b/dnf5-plugins/automatic_plugin/automatic.cpp
+index 020ec26..c0507da 100644
+--- a/dnf5-plugins/automatic_plugin/automatic.cpp
++++ b/dnf5-plugins/automatic_plugin/automatic.cpp
+@@ -45,6 +45,8 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ #include <string>
+ #include <thread>
+ 
++#include "libdnf5/base/base.hpp"
++
+ namespace {
+ 
+ /// Sleep for random number of seconds in interval <0, max_value>
+@@ -360,7 +362,11 @@ void AutomaticCommand::run() {
+         if (!transaction.empty()) {
+             char * tt_string;
+             size_t size;
++#ifdef __MVS__
++            auto * fd = memstream_open(&tt_string, &size);
++#else
+             auto * fd = open_memstream(&tt_string, &size);
++#endif
+             {
+                 libdnf5::cli::output::TransactionTable table(
+                     static_cast<libdnf5::cli::output::ITransaction &>(cli_output_transaction));
+@@ -370,6 +376,9 @@ void AutomaticCommand::run() {
+                 table.print_table();
+                 table.print_summary();
+             }
++#ifdef __MVS__
++            memstream_finish(fd, &tt_string, &size);
++#endif
+             fclose(fd);
+             output_stream << tt_string;
+             free(tt_string);
+diff --git a/dnf5-plugins/automatic_plugin/config_automatic.cpp b/dnf5-plugins/automatic_plugin/config_automatic.cpp
+index 316fb70..733df1c 100644
+--- a/dnf5-plugins/automatic_plugin/config_automatic.cpp
++++ b/dnf5-plugins/automatic_plugin/config_automatic.cpp
+@@ -23,6 +23,8 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ 
+ #include <cstdlib>
+ 
++#define HOST_NAME_MAX _POSIX_HOST_NAME_MAX
++
+ namespace dnf5 {
+ 
+ void ConfigAutomatic::load_from_parser(
+diff --git a/dnf5-plugins/automatic_plugin/email_message.cpp b/dnf5-plugins/automatic_plugin/email_message.cpp
+index 8168ae8..44eab8a 100644
+--- a/dnf5-plugins/automatic_plugin/email_message.cpp
++++ b/dnf5-plugins/automatic_plugin/email_message.cpp
+@@ -43,10 +43,35 @@ void EmailMessage::set_body(std::stringstream & body) {
+     }
+ }
+ 
++static inline std::string get_tz_offset(const std::time_t &t) {
++   struct tm local_tm;
++   localtime_r(&t, &local_tm);
++
++   struct tm utc_tm;
++   gmtime_r(&t, &utc_tm);
++
++   time_t local_sec = mktime(&local_tm);
++   time_t utc_sec = mktime(&utc_tm);
++   long offset = static_cast<long>(difftime(local_sec, utc_sec));
++
++   // Compute sign, hours, and minutes
++   char tzbuf[16];
++   char sign = (offset >= 0) ? '+' : '-';
++   offset = std::labs(offset);
++   int hours = offset / 3600;
++   int mins = (offset % 3600) / 60;
++
++   std::snprintf(tzbuf, sizeof(tzbuf), "%c%02d%02d", sign, hours, mins);
++
++   return std::string(tzbuf);
++}
++
+ std::string EmailMessage::str() {
+     // RFC 5322 requires dates with integral seconds.
+     const auto now = std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::system_clock::now());
+-    std::string date = fmt::format("{:%a, %d %b %Y %H:%M:%S %z}", now);
++    std::string date = fmt::format("{:%a, %d %b %Y %H:%M:%S}", now);
++    auto t = std::chrono::system_clock::to_time_t(now);
++    date = date + " " + get_tz_offset(t);
+ 
+     std::string to_str;
+     for (const auto & eml : to) {
+diff --git a/dnf5-plugins/automatic_plugin/emitters.cpp b/dnf5-plugins/automatic_plugin/emitters.cpp
+index 3965ec4..bf7c6dc 100644
+--- a/dnf5-plugins/automatic_plugin/emitters.cpp
++++ b/dnf5-plugins/automatic_plugin/emitters.cpp
+@@ -33,6 +33,33 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ #include <iomanip>
+ #include <iostream>
+ 
++#ifdef __MVS__
++FILE *fmemopen(void *buf, size_t size, const char *mode) {
++    char temp[] = "/tmp/zmemXXXXXX";  // mkstemp-compatible
++    int fd = mkstemp(temp);
++    if (fd == -1)
++        return NULL;
++
++    unlink(temp);
++
++    FILE *fp = fdopen(fd, "w+b");
++    if (!fp) {
++        close(fd);
++        return NULL;
++    }
++
++    if (buf && size && (strchr(mode, 'r') || strchr(mode, '+'))) {
++        if (fwrite(buf, 1, size, fp) != size) {
++            fclose(fp);
++            return NULL;
++        }
++        rewind(fp);
++    }
++
++    return fp;
++}
++#endif
++
+ namespace dnf5 {
+ 
+ constexpr const char * MOTD_FILENAME = "/etc/motd.d/dnf5-automatic";

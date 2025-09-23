@@ -1,0 +1,16 @@
+diff --git a/include/libdnf5/base/base.hpp b/include/libdnf5/base/base.hpp
+index b986cc5..70537e6 100644
+--- a/include/libdnf5/base/base.hpp
++++ b/include/libdnf5/base/base.hpp
+@@ -37,6 +37,11 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ #include "libdnf5/transaction/transaction_history.hpp"
+ 
+ 
++#ifdef __MVS__
++FILE *memstream_open(char **out_buf, size_t *out_len);
++int memstream_finish(FILE *fp, char **out_buf, size_t *out_len);
++#endif
++
+ namespace libdnf5::module {
+ 
+ class ModuleDB;
