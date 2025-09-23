@@ -1,6 +1,6 @@
 # Update bump details accordingly. Use bump check to confirm.
 # bump: dnf5-version /DNF5_VERSION="(.*)"/ https://github.com/rpm-software-management/dnf5.git|semver:*
-DNF5_VERSION="5.2.15.0" # Specify a stable release
+DNF5_VERSION="5.1.17" # Specify a stable release
 export ZOPEN_STABLE_TAG="${DNF5_VERSION}"
 
 ###
