@@ -64,7 +64,7 @@ index e7b5622..2066082 100644
  
  }  // namespace libdnf5::utils
 diff --git a/libdnf5/utils/system.cpp b/libdnf5/utils/system.cpp
-index 89c1130..a2a2a3d 100644
+index 89c1130..ec8c2e2 100644
 --- a/libdnf5/utils/system.cpp
 +++ b/libdnf5/utils/system.cpp
 @@ -22,7 +22,7 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
@@ -84,7 +84,7 @@ index 89c1130..a2a2a3d 100644
      if (!strncmp(un.machine, "armv", 4)) {
          /* un.machine is armvXE, where X is version number and E is
           * endianness (b or l); we need to add modifiers such as
-@@ -69,6 +70,7 @@ std::string detect_arch() {
+@@ -69,12 +70,16 @@ std::string detect_arch() {
          *modifier++ = endian;
          *modifier = 0;
      }
@@ -92,3 +92,12 @@ index 89c1130..a2a2a3d 100644
  #ifdef __MIPSEL__
      // support for little endian MIPS
      if (!strcmp(un.machine, "mips"))
+         strcpy(un.machine, "mipsel");
+     else if (!strcmp(un.machine, "mips64"))
+         strcpy(un.machine, "mips64el");
++#endif
++#ifdef __MVS__
++    strcpy(un.machine, "s390x");
+ #endif
+     return un.machine;
+ }
