@@ -27,7 +27,7 @@ index d1438d3..04ce20c 100644
  
  if(WITH_SYSTEMD)
 diff --git a/dnf5/context.cpp b/dnf5/context.cpp
-index 9986849..6d7099c 100644
+index d02e524..47c63cb 100644
 --- a/dnf5/context.cpp
 +++ b/dnf5/context.cpp
 @@ -52,6 +52,8 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
@@ -39,10 +39,10 @@ index 9986849..6d7099c 100644
  namespace fs = std::filesystem;
  
  namespace dnf5 {
-@@ -447,8 +449,8 @@ void Context::Impl::download_and_run(libdnf5::base::Transaction & transaction) {
+@@ -452,8 +454,8 @@ void Context::Impl::download_and_run(libdnf5::base::Transaction & transaction) {
                  _("Location \"{}\" already contains a stored transaction, it will be overwritten."),
                  transaction_store_path.string()));
-             if (libdnf5::cli::utils::userconfirm::userconfirm(base.get_config())) {
+             if (libdnf5::cli::utils::userconfirm::userconfirm(config)) {
 -                std::filesystem::remove_all(packages_location);
 -                std::filesystem::remove_all(comps_location);
 +                portable_remove_all(packages_location);
