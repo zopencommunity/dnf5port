@@ -1,12 +1,11 @@
 diff --git a/test/libdnf5/conf/test_conf.cpp b/test/libdnf5/conf/test_conf.cpp
-index fad92d4..d8cf94a 100644
+index a031481..c91542e 100644
 --- a/test/libdnf5/conf/test_conf.cpp
 +++ b/test/libdnf5/conf/test_conf.cpp
-@@ -16,9 +16,9 @@ GNU General Public License for more details.
- You should have received a copy of the GNU General Public License
- along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
- */
--
+@@ -17,8 +17,9 @@
+ // You should have received a copy of the GNU General Public License
+ // along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ 
 -
 +#define system system_dont_use
  #include "test_conf.hpp"
@@ -15,18 +14,17 @@ index fad92d4..d8cf94a 100644
  #include "../shared/utils.hpp"
  
 diff --git a/test/libdnf5/conf/test_option.cpp b/test/libdnf5/conf/test_option.cpp
-index c3bcc68..6623ecd 100644
+index bca457e..077bdd6 100644
 --- a/test/libdnf5/conf/test_option.cpp
 +++ b/test/libdnf5/conf/test_option.cpp
-@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
- along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
- */
+@@ -17,8 +17,9 @@
+ // You should have received a copy of the GNU General Public License
+ // along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
  
 -
 +#define system system_dont_use
  #include "test_option.hpp"
--
 +#undef system
+ 
  #include "../shared/utils.hpp"
  
- #include <libdnf5/conf/option_bool.hpp>

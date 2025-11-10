@@ -1,13 +1,13 @@
 diff --git a/libdnf5-cli/progressbar/progress_bar.cpp b/libdnf5-cli/progressbar/progress_bar.cpp
-index 99cb44d..764fc46 100644
+index 6656769..0692cbd 100644
 --- a/libdnf5-cli/progressbar/progress_bar.cpp
 +++ b/libdnf5-cli/progressbar/progress_bar.cpp
-@@ -100,7 +100,7 @@ void ProgressBar::update() {
-         percent_done = static_cast<int32_t>(static_cast<float>(ticks) / static_cast<float>(total_ticks) * 100);
+@@ -306,7 +306,7 @@ void ProgressBar::update() {
+             static_cast<int32_t>(static_cast<float>(p_impl->ticks) / static_cast<float>(p_impl->total_ticks) * 100);
      }
  
 -    auto now = std::chrono::high_resolution_clock::now();
 +    auto now = std::chrono::system_clock::now();
  
      // compute the current speed (ticks per second)
-     auto delta = now - current_speed_window_start;
+     auto delta = now - p_impl->current_speed_window_start;

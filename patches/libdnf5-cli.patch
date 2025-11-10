@@ -1,5 +1,5 @@
 diff --git a/libdnf5-cli/CMakeLists.txt b/libdnf5-cli/CMakeLists.txt
-index ba92d79..aaa6af2 100644
+index db1a6fcc..469a042c 100644
 --- a/libdnf5-cli/CMakeLists.txt
 +++ b/libdnf5-cli/CMakeLists.txt
 @@ -28,7 +28,7 @@ list(APPEND LIBDNF5_CLI_PC_REQUIRES_PRIVATE)
@@ -8,18 +8,9 @@ index ba92d79..aaa6af2 100644
  # build libdnf5-cli.so
 -add_library(libdnf5-cli SHARED ${LIBDNF5_CLI_SOURCES})
 +add_library(libdnf5-cli STATIC ${LIBDNF5_CLI_SOURCES})
- set(DNF_CLI_SO_VERSION 2)
+ set(DNF_CLI_SO_VERSION 3)
  set_target_properties(libdnf5-cli PROPERTIES OUTPUT_NAME "dnf5-cli")
  set_target_properties(libdnf5-cli PROPERTIES SOVERSION ${DNF_CLI_SO_VERSION})
-@@ -38,7 +38,7 @@ target_link_libraries(libdnf5-cli PUBLIC stdc++)
- 
- # install libdnf5-cli.so
- install(TARGETS libdnf5-cli LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
--
-+#install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/libdnf5-cli.so DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
- 
- # link libraries and set pkg-config requires
- 
 @@ -46,9 +46,11 @@ target_link_libraries(libdnf5-cli PRIVATE common_obj)
  
  target_link_libraries(libdnf5-cli PUBLIC libdnf5)
