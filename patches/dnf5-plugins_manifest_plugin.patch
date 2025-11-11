@@ -1,0 +1,12 @@
+diff --git a/dnf5-plugins/manifest_plugin/CMakeLists.txt b/dnf5-plugins/manifest_plugin/CMakeLists.txt
+index 72b5a2d..9be3e6c 100644
+--- a/dnf5-plugins/manifest_plugin/CMakeLists.txt
++++ b/dnf5-plugins/manifest_plugin/CMakeLists.txt
+@@ -10,6 +10,6 @@ pkg_check_modules(LIBPKGMANIFEST REQUIRED libpkgmanifest)
+ target_link_directories(manifest_cmd_plugin PRIVATE ${LIBPKGMANIFEST_LIBRARY_DIRS})
+ target_link_libraries(manifest_cmd_plugin PRIVATE pkgmanifest)
+ 
+-target_link_libraries(manifest_cmd_plugin PRIVATE dnf5 libdnf5 libdnf5-cli)
++target_link_libraries(manifest_cmd_plugin PRIVATE dnf5_core libdnf5 libdnf5-cli)
+ 
+ install(TARGETS manifest_cmd_plugin LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/dnf5/plugins/)
