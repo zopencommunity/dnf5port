@@ -1,6 +1,6 @@
 # Update bump details accordingly. Use bump check to confirm.
 # bump: dnf5-version /DNF5_VERSION="(.*)"/ https://github.com/rpm-software-management/dnf5|re:#href=".*?releases/tag/([\d.]+)"#$1#
-DNF5_VERSION="5.2.17.0" # Specify a stable release
+DNF5_VERSION="5.3.0.0" # Specify a stable release
 export ZOPEN_STABLE_TAG="${DNF5_VERSION}"
 
 ###
@@ -16,7 +16,7 @@ export ZOPEN_BUILD_LINE="STABLE"
 
 ## Required IF ZOPEN_BUILD_LINE='STABLE'
 export ZOPEN_STABLE_URL="https://github.com/rpm-software-management/dnf5.git"  # Specify the stable build URL (either git or tarball)
-export ZOPEN_STABLE_DEPS="zoslib make curl cmake pkgconfig toml11 fmt jsonc libsolv rpm popt libxml2 librepo glib libpsl sqlite gettext bash-completion util-linux zlib bzip2 xz zstd lua libgcrypt libgpgme libgpgerror libassuan check_python cppunit createrepo_c bash gawk grep" # Specify the stable build dependencies.
+export ZOPEN_STABLE_DEPS="zoslib make curl cmake pkgconfig toml11 fmt jsonc libsolv rpm popt libxml2 librepo glib libpsl sqlite gettext bash-completion util-linux zlib bzip2 xz zstd lua libgcrypt libgpgme libgpgerror libassuan check_python cppunit createrepo_c bash gawk grep libpkgmanifest yamlcpp" # Specify the stable build dependencies.
 
 ## Required IF ZOPEN_BUILD_LINE='DEV'
 export ZOPEN_DEV_URL=""   # Specify the dev build URL

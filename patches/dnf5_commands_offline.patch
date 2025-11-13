@@ -1,8 +1,8 @@
 diff --git a/dnf5/commands/offline/offline.cpp b/dnf5/commands/offline/offline.cpp
-index a32dbc1..a70c122 100644
+index 0a21525..531bc58 100644
 --- a/dnf5/commands/offline/offline.cpp
 +++ b/dnf5/commands/offline/offline.cpp
-@@ -47,6 +47,8 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+@@ -47,6 +47,8 @@
  #include <iostream>
  #include <string>
  
@@ -11,12 +11,16 @@ index a32dbc1..a70c122 100644
  using namespace libdnf5::cli;
  
  const std::string & ID_TO_IDENTIFY_BOOTS = libdnf5::offline::OFFLINE_STARTED_ID;
-@@ -288,7 +290,7 @@ void clean_datadir(Context & ctx, const std::filesystem::path & datadir) {
+@@ -291,10 +293,10 @@ void clean_datadir_and_destdir(
      ctx.get_base().get_logger()->info("Cleaning up downloaded data...");
  
      for (const auto & entry : std::filesystem::directory_iterator(datadir)) {
 -        std::filesystem::remove_all(entry.path());
-+	portable_remove_all(entry.path());
++        portable_remove_all(entry.path());
+     }
+     for (const auto & entry : std::filesystem::directory_iterator(destdir)) {
+-        std::filesystem::remove_all(entry.path());
++        portable_remove_all(entry.path());
      }
  }
  

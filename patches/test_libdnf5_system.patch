@@ -1,20 +1,20 @@
 diff --git a/test/libdnf5/system/test_state.cpp b/test/libdnf5/system/test_state.cpp
-index 041ef32..3b9c878 100644
+index cdc268d..16e8558 100644
 --- a/test/libdnf5/system/test_state.cpp
 +++ b/test/libdnf5/system/test_state.cpp
-@@ -17,11 +17,12 @@ You should have received a copy of the GNU Lesser General Public License
- along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
- */
+@@ -18,11 +18,13 @@
+ // along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
  
--
+ 
 -#include "test_state.hpp"
 +#define system system_dont_use
 +#include "libdnf5/utils/fs/file.hpp"
 +#undef system
  
  #include "../shared/utils.hpp"
--
+ 
+-#include "libdnf5/utils/fs/file.hpp"
 +#include "test_state.hpp"
- #include "libdnf5/utils/fs/file.hpp"
  
  
+ CPPUNIT_TEST_SUITE_REGISTRATION(StateTest);
