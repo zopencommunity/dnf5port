@@ -1,36 +1,8 @@
-diff --git a/dnf5/CMakeLists.txt b/dnf5/CMakeLists.txt
-index d1438d3..04ce20c 100644
---- a/dnf5/CMakeLists.txt
-+++ b/dnf5/CMakeLists.txt
-@@ -35,13 +35,20 @@ include_directories(.)
- add_executable(dnf5 ${DNF5_SOURCES})
- 
- # Enable symbol export. Needed for loadable modules (dnf5 plugins).
--set_property(TARGET dnf5 PROPERTY ENABLE_EXPORTS 1)
-+#set_property(TARGET dnf5 PROPERTY ENABLE_EXPORTS 1)
- # Export only explicitly marked symbols.
- set_target_properties(dnf5 PROPERTIES C_VISIBILITY_PRESET hidden CXX_VISIBILITY_PRESET hidden)
--
- target_link_libraries(dnf5 PRIVATE common_obj libdnf5 libdnf5-cli Threads::Threads)
--install(TARGETS dnf5 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
- 
-+# Build a separate shared library from the same sources
-+add_library(dnf5_core STATIC ${DNF5_SOURCES})
-+set_target_properties(dnf5_core PROPERTIES OUTPUT_NAME "dnf5_core")
-+target_compile_options(dnf5_core PRIVATE -fvisibility=default)
-+target_link_libraries(dnf5_core PRIVATE common_obj libdnf5 libdnf5-cli Threads::Threads)
-+
-+install(TARGETS dnf5 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-+install(TARGETS dnf5_core LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+#install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/libdnf5_core.so DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
- pkg_check_modules(RPM REQUIRED rpm>=4.17.0)
- 
- if(WITH_SYSTEMD)
 diff --git a/dnf5/context.cpp b/dnf5/context.cpp
-index d02e524..47c63cb 100644
+index 5a2cac3..bb76b54 100644
 --- a/dnf5/context.cpp
 +++ b/dnf5/context.cpp
-@@ -52,6 +52,8 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+@@ -52,6 +52,8 @@
  #include <tuple>
  #include <utility>
  
@@ -39,7 +11,7 @@ index d02e524..47c63cb 100644
  namespace fs = std::filesystem;
  
  namespace dnf5 {
-@@ -452,8 +454,8 @@ void Context::Impl::download_and_run(libdnf5::base::Transaction & transaction) {
+@@ -455,8 +457,8 @@ void Context::Impl::download_and_run(libdnf5::base::Transaction & transaction) {
                  _("Location \"{}\" already contains a stored transaction, it will be overwritten."),
                  transaction_store_path.string()));
              if (libdnf5::cli::utils::userconfirm::userconfirm(config)) {

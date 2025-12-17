@@ -1,8 +1,8 @@
 diff --git a/test/libdnf5/utils/test_fs.cpp b/test/libdnf5/utils/test_fs.cpp
-index 65819db..ecb5263 100644
+index b06bc64..ce845a8 100644
 --- a/test/libdnf5/utils/test_fs.cpp
 +++ b/test/libdnf5/utils/test_fs.cpp
-@@ -26,7 +26,7 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+@@ -26,7 +26,7 @@
  #include <libdnf5/common/exception.hpp>
  
  #include <filesystem>

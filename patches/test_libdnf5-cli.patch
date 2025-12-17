@@ -1,8 +1,8 @@
 diff --git a/test/libdnf5-cli/run_tests.cpp b/test/libdnf5-cli/run_tests.cpp
-index 310e2c1..c406608 100644
+index 78242a1..ddcfbb6 100644
 --- a/test/libdnf5-cli/run_tests.cpp
 +++ b/test/libdnf5-cli/run_tests.cpp
-@@ -31,16 +31,16 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+@@ -31,16 +31,16 @@
  
  class TimingListener : public CppUnit::TestListener {
  public:

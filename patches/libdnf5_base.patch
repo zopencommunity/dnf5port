@@ -1,8 +1,8 @@
 diff --git a/libdnf5/base/base.cpp b/libdnf5/base/base.cpp
-index 5ac1139..0fa3230 100644
+index 4262746..58d26f5 100644
 --- a/libdnf5/base/base.cpp
 +++ b/libdnf5/base/base.cpp
-@@ -48,6 +48,48 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+@@ -49,6 +49,48 @@
  
  namespace fs = std::filesystem;
  

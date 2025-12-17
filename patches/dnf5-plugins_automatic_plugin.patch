@@ -1,21 +1,8 @@
-diff --git a/dnf5-plugins/automatic_plugin/CMakeLists.txt b/dnf5-plugins/automatic_plugin/CMakeLists.txt
-index d0834cb..425afe6 100644
---- a/dnf5-plugins/automatic_plugin/CMakeLists.txt
-+++ b/dnf5-plugins/automatic_plugin/CMakeLists.txt
-@@ -9,7 +9,7 @@ add_library(automatic_cmd_plugin MODULE ${AUTOMATIC_SOURCES})
- set_target_properties(automatic_cmd_plugin PROPERTIES PREFIX "")
- 
- target_link_libraries(automatic_cmd_plugin PRIVATE libdnf5 libdnf5-cli)
--target_link_libraries(automatic_cmd_plugin PRIVATE dnf5)
-+target_link_libraries(automatic_cmd_plugin PRIVATE dnf5_core)
- 
- install(TARGETS automatic_cmd_plugin LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/dnf5/plugins/)
- install(DIRECTORY "config/usr/" DESTINATION "${CMAKE_INSTALL_PREFIX}")
 diff --git a/dnf5-plugins/automatic_plugin/automatic.cpp b/dnf5-plugins/automatic_plugin/automatic.cpp
-index 020ec26..c0507da 100644
+index 9a4350a..3193df6 100644
 --- a/dnf5-plugins/automatic_plugin/automatic.cpp
 +++ b/dnf5-plugins/automatic_plugin/automatic.cpp
-@@ -45,6 +45,8 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+@@ -45,6 +45,8 @@
  #include <string>
  #include <thread>
  
@@ -47,10 +34,10 @@ index 020ec26..c0507da 100644
              output_stream << tt_string;
              free(tt_string);
 diff --git a/dnf5-plugins/automatic_plugin/config_automatic.cpp b/dnf5-plugins/automatic_plugin/config_automatic.cpp
-index 316fb70..733df1c 100644
+index c539242..1449499 100644
 --- a/dnf5-plugins/automatic_plugin/config_automatic.cpp
 +++ b/dnf5-plugins/automatic_plugin/config_automatic.cpp
-@@ -23,6 +23,8 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+@@ -23,6 +23,8 @@
  
  #include <cstdlib>
  
@@ -60,7 +47,7 @@ index 316fb70..733df1c 100644
  
  void ConfigAutomatic::load_from_parser(
 diff --git a/dnf5-plugins/automatic_plugin/email_message.cpp b/dnf5-plugins/automatic_plugin/email_message.cpp
-index 8168ae8..44eab8a 100644
+index bac94b4..581e997 100644
 --- a/dnf5-plugins/automatic_plugin/email_message.cpp
 +++ b/dnf5-plugins/automatic_plugin/email_message.cpp
 @@ -43,10 +43,35 @@ void EmailMessage::set_body(std::stringstream & body) {
@@ -101,10 +88,10 @@ index 8168ae8..44eab8a 100644
      std::string to_str;
      for (const auto & eml : to) {
 diff --git a/dnf5-plugins/automatic_plugin/emitters.cpp b/dnf5-plugins/automatic_plugin/emitters.cpp
-index 3965ec4..bf7c6dc 100644
+index 037a8fc..4797195 100644
 --- a/dnf5-plugins/automatic_plugin/emitters.cpp
 +++ b/dnf5-plugins/automatic_plugin/emitters.cpp
-@@ -33,6 +33,33 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+@@ -33,6 +33,33 @@
  #include <iomanip>
  #include <iostream>
  

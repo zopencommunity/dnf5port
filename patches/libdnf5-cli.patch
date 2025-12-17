@@ -1,5 +1,5 @@
 diff --git a/libdnf5-cli/CMakeLists.txt b/libdnf5-cli/CMakeLists.txt
-index db1a6fcc..469a042c 100644
+index db1a6fc..469a042 100644
 --- a/libdnf5-cli/CMakeLists.txt
 +++ b/libdnf5-cli/CMakeLists.txt
 @@ -28,7 +28,7 @@ list(APPEND LIBDNF5_CLI_PC_REQUIRES_PRIVATE)

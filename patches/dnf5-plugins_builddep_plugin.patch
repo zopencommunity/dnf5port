@@ -1,5 +1,5 @@
 diff --git a/dnf5-plugins/builddep_plugin/CMakeLists.txt b/dnf5-plugins/builddep_plugin/CMakeLists.txt
-index b8640e1..018afda 100644
+index b8640e1..143e668 100644
 --- a/dnf5-plugins/builddep_plugin/CMakeLists.txt
 +++ b/dnf5-plugins/builddep_plugin/CMakeLists.txt
 @@ -7,7 +7,7 @@ add_library(builddep_cmd_plugin MODULE builddep.cpp builddep_cmd_plugin.cpp)
@@ -11,12 +11,3 @@ index b8640e1..018afda 100644
  target_link_libraries(builddep_cmd_plugin PRIVATE ${RPMBUILD})
  
  pkg_check_modules(RPM REQUIRED rpm)
-@@ -15,7 +15,7 @@ target_link_libraries(builddep_cmd_plugin PRIVATE ${RPM_LIBRARIES})
- 
- target_link_libraries(builddep_cmd_plugin PRIVATE common_obj)
- target_link_libraries(builddep_cmd_plugin PRIVATE libdnf5 libdnf5-cli)
--target_link_libraries(builddep_cmd_plugin PRIVATE dnf5)
-+target_link_libraries(builddep_cmd_plugin PRIVATE dnf5_core)
- 
- install(TARGETS builddep_cmd_plugin LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/dnf5/plugins/)
- 

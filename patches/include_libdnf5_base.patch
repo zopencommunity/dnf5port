@@ -1,8 +1,8 @@
 diff --git a/include/libdnf5/base/base.hpp b/include/libdnf5/base/base.hpp
-index b986cc5..70537e6 100644
+index cac6d35..6c4e3e6 100644
 --- a/include/libdnf5/base/base.hpp
 +++ b/include/libdnf5/base/base.hpp
-@@ -37,6 +37,11 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+@@ -38,6 +38,11 @@
  #include "libdnf5/transaction/transaction_history.hpp"
  
  

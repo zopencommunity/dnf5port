@@ -1,5 +1,5 @@
 diff --git a/libdnf5/CMakeLists.txt b/libdnf5/CMakeLists.txt
-index 257a248..48a360a 100644
+index fa4c9d1..b6fbfa6 100644
 --- a/libdnf5/CMakeLists.txt
 +++ b/libdnf5/CMakeLists.txt
 @@ -41,7 +41,7 @@ add_library(libdnf5_iface INTERFACE)

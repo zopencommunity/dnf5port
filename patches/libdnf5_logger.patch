@@ -1,8 +1,8 @@
 diff --git a/libdnf5/logger/logger.cpp b/libdnf5/logger/logger.cpp
-index 38c8ff0..f401a41 100644
+index 3724f34..5b4939a 100644
 --- a/libdnf5/logger/logger.cpp
 +++ b/libdnf5/logger/logger.cpp
-@@ -22,7 +22,6 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+@@ -22,7 +22,6 @@
  #include <fmt/chrono.h>
  
  #include <array>

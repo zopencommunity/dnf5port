@@ -118,7 +118,7 @@ zopen_append_to_zoslib_env(){
   ## This function runs as part of generation of the C function zoslib_env_hook,
   ## which can be used to set environment variables before main is run.
 cat <<EOF
-LIBPATH|prepend|PROJECT_ROOT/lib/libdnf5/plugins/:PROJECT_ROOT/lib/dnf5/plugins/:PROJECT_ROOT/lib/
+LIBPATH|prepend|PROJECT_ROOT/lib/libdnf5/plugins/:PROJECT_ROOT/lib/dnf5/plugins/:PROJECT_ROOT/lib/:PROJECT_ROOT/bin/
 RPM_CONFIGDIR|set|PROJECT_ROOT/../../rpm/rpm/lib/rpm/
 EOF
 }
