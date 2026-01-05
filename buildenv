@@ -35,8 +35,6 @@ export ZOPEN_SYSTEM_PREREQ=""
 
 export USE_ZOSLIB_LOCALE=1
 
-export ZOPEN_COMP=OPENXL
-
 ###
 ### Build stage control environment variables
 ###
