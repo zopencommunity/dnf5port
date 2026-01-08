@@ -163,10 +163,10 @@ EOF
 ### Optional build control variables
 ###
 
-export ZOPEN_EXTRA_CFLAGS="-mzos-sys-include=/usr/include"  ## C compiler flags to append to CFLAGS (defaults to '').
+#export ZOPEN_EXTRA_CFLAGS=""  ## C compiler flags to append to CFLAGS (defaults to '').
 export ZOPEN_EXTRA_CPPFLAGS="-D__XPLAT=1 -D_POSIX_C_SOURCE=200809L" ## C,C++ pre-processor flags to append to CPPFLAGS (defaults to '')
-export ZOPEN_EXTRA_CXXFLAGS="-mzos-sys-include=/usr/include" ## C++ compiler flags to append to CXXFLAGS (defaults to '')
-export ZOPEN_EXTRA_LDFLAGS="-mzos-hlq-le=CEE -mzos-hlq-clang=CEE" ## C,C++ linker flags to append to LDFLAGS (defaults to '')
+#export ZOPEN_EXTRA_CXXFLAGS="" ## C++ compiler flags to append to CXXFLAGS (defaults to '')
+#export ZOPEN_EXTRA_LDFLAGS="" ## C,C++ linker flags to append to LDFLAGS (defaults to '')
 #export ZOPEN_EXTRA_LIBS="" ## C,C++ libraries to append to LIBS (defaults to '')
 #export ZOPEN_BOOTSTRAP_OPTS="" ## Options to pass to bootstrap program (defaults to '')
 #export ZOPEN_CHECK_MINIMAL="" ## Check program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will get them from env vars.
