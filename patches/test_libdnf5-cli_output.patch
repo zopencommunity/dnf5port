@@ -1,5 +1,5 @@
 diff --git a/test/libdnf5-cli/output/test_repoquery.cpp b/test/libdnf5-cli/output/test_repoquery.cpp
-index 30a3a26..99231db 100644
+index dd504d0..27b9197 100644
 --- a/test/libdnf5-cli/output/test_repoquery.cpp
 +++ b/test/libdnf5-cli/output/test_repoquery.cpp
 @@ -42,13 +42,20 @@ namespace {

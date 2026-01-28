@@ -1,8 +1,8 @@
 diff --git a/test/libdnf5/logger/test_file_logger.cpp b/test/libdnf5/logger/test_file_logger.cpp
-index 3303ad5..6ca5da3 100644
+index c32b892..c6e4421 100644
 --- a/test/libdnf5/logger/test_file_logger.cpp
 +++ b/test/libdnf5/logger/test_file_logger.cpp
-@@ -22,6 +22,7 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+@@ -22,6 +22,7 @@
  
  #include <libdnf5/logger/factory.hpp>
  

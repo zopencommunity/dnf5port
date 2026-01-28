@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 70eb5d3..0405b85 100644
+index 0507e30..2e835eb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -86,7 +86,7 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
+@@ -88,7 +88,7 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
  add_compile_options("-fmacro-prefix-map=${PROJECT_SOURCE_DIR}/=")
  
  # warnings

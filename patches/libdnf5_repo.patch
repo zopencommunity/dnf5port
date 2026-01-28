@@ -1,8 +1,8 @@
 diff --git a/libdnf5/repo/repo_downloader.cpp b/libdnf5/repo/repo_downloader.cpp
-index 304066c..0d5e80f 100644
+index a53d51d..5f483f1 100644
 --- a/libdnf5/repo/repo_downloader.cpp
 +++ b/libdnf5/repo/repo_downloader.cpp
-@@ -38,6 +38,8 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+@@ -38,6 +38,8 @@
  #include <fstream>
  #include <random>
  

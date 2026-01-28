@@ -1,5 +1,5 @@
 diff --git a/dnf5-plugins/config-manager_plugin/CMakeLists.txt b/dnf5-plugins/config-manager_plugin/CMakeLists.txt
-index da04603..9db7de1 100644
+index da04603..c523b94 100644
 --- a/dnf5-plugins/config-manager_plugin/CMakeLists.txt
 +++ b/dnf5-plugins/config-manager_plugin/CMakeLists.txt
 @@ -8,8 +8,10 @@ add_library(config-manager_cmd_plugin MODULE ${CONFIG_MANAGER_SOURCES})
@@ -15,12 +15,3 @@ index da04603..9db7de1 100644
  
  find_package(CURL 7.62.0 REQUIRED)
  include_directories(${CURL_INCLUDE_DIR})
-@@ -18,7 +20,7 @@ find_package(ZLIB REQUIRED)
- 
- target_link_libraries(config-manager_cmd_plugin PRIVATE ZLIB::ZLIB)
- target_link_libraries(config-manager_cmd_plugin PRIVATE libdnf5 libdnf5-cli)
--target_link_libraries(config-manager_cmd_plugin PRIVATE dnf5)
-+target_link_libraries(config-manager_cmd_plugin PRIVATE dnf5_core)
- 
- install(TARGETS config-manager_cmd_plugin LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/dnf5/plugins/)
- 

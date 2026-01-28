@@ -1,8 +1,8 @@
 diff --git a/libdnf5/utils/library.cpp b/libdnf5/utils/library.cpp
-index b2a5052..e864d8b 100644
+index 6d06dcc..f0a1c31 100644
 --- a/libdnf5/utils/library.cpp
 +++ b/libdnf5/utils/library.cpp
-@@ -23,6 +23,8 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+@@ -23,6 +23,8 @@
  
  #include <dlfcn.h>
  
@@ -12,10 +12,10 @@ index b2a5052..e864d8b 100644
  
  Library::Library(const std::string & path) : path(path) {
 diff --git a/libdnf5/utils/os_release.cpp b/libdnf5/utils/os_release.cpp
-index e7b5622..2066082 100644
+index 59b3ef3..66d819c 100644
 --- a/libdnf5/utils/os_release.cpp
 +++ b/libdnf5/utils/os_release.cpp
-@@ -22,6 +22,8 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+@@ -22,6 +22,8 @@
  #include <filesystem>
  #include <fstream>
  #include <regex>
@@ -64,10 +64,10 @@ index e7b5622..2066082 100644
  
  }  // namespace libdnf5::utils
 diff --git a/libdnf5/utils/system.cpp b/libdnf5/utils/system.cpp
-index 89c1130..ec8c2e2 100644
+index ecdc57e..897970b 100644
 --- a/libdnf5/utils/system.cpp
 +++ b/libdnf5/utils/system.cpp
-@@ -22,7 +22,7 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+@@ -22,7 +22,7 @@
  #include <libdnf5/common/exception.hpp>
  #include <libdnf5/utils/bgettext/bgettext-mark-domain.h>
  #include <rpm/rpmlib.h>

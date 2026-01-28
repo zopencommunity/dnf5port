@@ -1,8 +1,8 @@
 diff --git a/libdnf5/conf/config_utils.cpp b/libdnf5/conf/config_utils.cpp
-index 68037ab..07561e2 100644
+index 66d39d5..47d531a 100644
 --- a/libdnf5/conf/config_utils.cpp
 +++ b/libdnf5/conf/config_utils.cpp
-@@ -23,6 +23,7 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+@@ -23,6 +23,7 @@
  
  #include <glob.h>
  
@@ -11,10 +11,10 @@ index 68037ab..07561e2 100644
  namespace libdnf5 {
  
 diff --git a/libdnf5/conf/vars.cpp b/libdnf5/conf/vars.cpp
-index 3cda2a3..86e5298 100644
+index 38a398b..7da4a56 100644
 --- a/libdnf5/conf/vars.cpp
 +++ b/libdnf5/conf/vars.cpp
-@@ -34,7 +34,7 @@ along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+@@ -34,7 +34,7 @@
  #include <rpm/rpmmacro.h>
  #include <rpm/rpmts.h>
  #include <stdlib.h>
