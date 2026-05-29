@@ -1,17 +1,8 @@
 diff --git a/test/libdnf5/utils/test_fs.cpp b/test/libdnf5/utils/test_fs.cpp
-index b06bc64..ce845a8 100644
+index 81a971d..7cd9ed9 100644
 --- a/test/libdnf5/utils/test_fs.cpp
 +++ b/test/libdnf5/utils/test_fs.cpp
-@@ -26,7 +26,7 @@
- #include <libdnf5/common/exception.hpp>
- 
- #include <filesystem>
--
-+#include <unistd.h>
- 
- using namespace libdnf5::utils::fs;
- namespace stdfs = std::filesystem;
-@@ -62,7 +62,12 @@ void UtilsFsTest::test_temp_dir() {
+@@ -63,7 +63,12 @@ void UtilsFsTest::test_temp_dir() {
          libdnf5::utils::fs::TempDir temp_dir("libdnf_unittest_temp_dir");
          path = temp_dir.get_path();
  
