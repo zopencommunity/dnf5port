@@ -1,8 +1,8 @@
 diff --git a/libdnf5-cli/progressbar/progress_bar.cpp b/libdnf5-cli/progressbar/progress_bar.cpp
-index 6656769..0692cbd 100644
+index 9098296..bcacc59 100644
 --- a/libdnf5-cli/progressbar/progress_bar.cpp
 +++ b/libdnf5-cli/progressbar/progress_bar.cpp
-@@ -306,7 +306,7 @@ void ProgressBar::update() {
+@@ -308,7 +308,7 @@ void ProgressBar::update() {
              static_cast<int32_t>(static_cast<float>(p_impl->ticks) / static_cast<float>(p_impl->total_ticks) * 100);
      }
  

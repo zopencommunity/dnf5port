@@ -1,8 +1,8 @@
 diff --git a/libdnf5/CMakeLists.txt b/libdnf5/CMakeLists.txt
-index fa4c9d1..b6fbfa6 100644
+index 0565714..3202443 100644
 --- a/libdnf5/CMakeLists.txt
 +++ b/libdnf5/CMakeLists.txt
-@@ -41,7 +41,7 @@ add_library(libdnf5_iface INTERFACE)
+@@ -38,7 +38,7 @@ add_library(libdnf5_iface INTERFACE)
  target_link_libraries(libdnf5_iface INTERFACE libdnf5_obj $<TARGET_OBJECTS:libdnf5_obj>)
  
  # build libdnf5.so
@@ -11,7 +11,7 @@ index fa4c9d1..b6fbfa6 100644
  set(DNF_SO_VERSION 2)
  set_target_properties(libdnf5 PROPERTIES OUTPUT_NAME "dnf5")
  set_target_properties(libdnf5 PROPERTIES SOVERSION ${DNF_SO_VERSION})
-@@ -53,6 +53,7 @@ target_link_libraries(libdnf5 PUBLIC stdc++)
+@@ -50,6 +50,7 @@ target_link_libraries(libdnf5 PUBLIC stdc++)
  
  # install libdnf5.so
  install(TARGETS libdnf5 LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
@@ -19,7 +19,7 @@ index fa4c9d1..b6fbfa6 100644
  
  target_link_libraries(libdnf5 PRIVATE common_obj)
  target_link_libraries(libdnf5_iface INTERFACE $<TARGET_OBJECTS:common_obj>)
-@@ -64,10 +65,14 @@ if (toml11_VERSION VERSION_LESS 4.0.0)
+@@ -61,10 +62,14 @@ if (toml11_VERSION VERSION_LESS 4.0.0)
      add_definitions(-DTOML11_COMPAT)
  endif()
  
