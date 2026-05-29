@@ -1,3 +1,68 @@
+diff --git a/libdnf5/utils/bootc.cpp b/libdnf5/utils/bootc.cpp
+index d6e007f..5f173e1 100644
+--- a/libdnf5/utils/bootc.cpp
++++ b/libdnf5/utils/bootc.cpp
+@@ -52,7 +52,7 @@ bool is_bootc_system() {
+     // Check if command failed (non-zero exit code)
+     if (result.returncode != 0) {
+         // Command ran but failed - show stderr to user
+-        std::string stderr_content(reinterpret_cast<const char *>(result.stderr.data()), result.stderr.size());
++        std::string stderr_content(reinterpret_cast<const char *>(result.err.data()), result.err.size());
+         if (!stderr_content.empty()) {
+             throw libdnf5::RuntimeError(M_("Got the following error checking bootc status: {}"), stderr_content);
+         } else {
+@@ -63,7 +63,7 @@ bool is_bootc_system() {
+     }
+ 
+     // Parse JSON output to check if .spec.image is not null
+-    std::string stdout_content(reinterpret_cast<const char *>(result.stdout.data()), result.stdout.size());
++    std::string stdout_content(reinterpret_cast<const char *>(result.out.data()), result.out.size());
+     std::unique_ptr<json_object, decltype(&json_object_put)> root(
+         json_tokener_parse(stdout_content.c_str()), json_object_put);
+ 
+diff --git a/libdnf5/utils/fs/temp.cpp b/libdnf5/utils/fs/temp.cpp
+index 7cebc14..9114706 100644
+--- a/libdnf5/utils/fs/temp.cpp
++++ b/libdnf5/utils/fs/temp.cpp
+@@ -25,6 +25,7 @@
+ #include <libdnf5/utils/bgettext/bgettext-mark-domain.h>
+ #include <unistd.h>
+ 
++#include <zos-filesystem.h>
+ 
+ namespace libdnf5::utils::fs {
+ 
+@@ -62,7 +63,7 @@ TempDir & TempDir::operator=(TempDir && src) noexcept {
+ TempDir::~TempDir() {
+     try {
+         if (!path.empty()) {
+-            std::filesystem::remove_all(path);
++            portable_remove_all(path);
+         }
+     } catch (std::exception &) {
+         // catch an exception that shouldn't be raised in a destructor
+diff --git a/libdnf5/utils/fs/utils.cpp b/libdnf5/utils/fs/utils.cpp
+index eeaacd7..0892125 100644
+--- a/libdnf5/utils/fs/utils.cpp
++++ b/libdnf5/utils/fs/utils.cpp
+@@ -26,6 +26,8 @@
+ #include <algorithm>
+ #include <cstring>
+ 
++#include <zos-filesystem.h>
++
+ namespace libdnf5::utils::fs {
+ 
+ namespace stdfs = std::filesystem;
+@@ -81,7 +83,7 @@ void move_recursive(const std::filesystem::path & src, const std::filesystem::pa
+         std::filesystem::rename(src, dest);
+     } catch (const std::filesystem::filesystem_error &) {
+         std::filesystem::copy(src, dest, std::filesystem::copy_options::recursive);
+-        std::filesystem::remove_all(src);
++        portable_remove_all(src);
+     }
+ }
+ 
 diff --git a/libdnf5/utils/library.cpp b/libdnf5/utils/library.cpp
 index 6d06dcc..f0a1c31 100644
 --- a/libdnf5/utils/library.cpp
@@ -63,6 +128,36 @@ index 59b3ef3..66d819c 100644
  }
  
  }  // namespace libdnf5::utils
+diff --git a/libdnf5/utils/subprocess.cpp b/libdnf5/utils/subprocess.cpp
+index 1a04804..bdc1407 100644
+--- a/libdnf5/utils/subprocess.cpp
++++ b/libdnf5/utils/subprocess.cpp
+@@ -279,8 +279,8 @@ CompletedProcess run(const std::string & command, const std::vector<std::string>
+ 
+     return CompletedProcess{
+         .returncode = returncode,
+-        .stdout = stdout_bytes,
+-        .stderr = stderr_bytes,
++        .out = stdout_bytes,
++        .err = stderr_bytes,
+     };
+ }
+ 
+diff --git a/libdnf5/utils/subprocess.hpp b/libdnf5/utils/subprocess.hpp
+index 7a5066e..9c54c08 100644
+--- a/libdnf5/utils/subprocess.hpp
++++ b/libdnf5/utils/subprocess.hpp
+@@ -11,8 +11,8 @@ namespace libdnf5::utils::subprocess {
+ 
+ struct CompletedProcess {
+     int returncode;
+-    std::vector<std::byte> stdout;
+-    std::vector<std::byte> stderr;
++    std::vector<std::byte> out;
++    std::vector<std::byte> err;
+ };
+ 
+ /// @brief Run a command in a child process and wait for it to complete.
 diff --git a/libdnf5/utils/system.cpp b/libdnf5/utils/system.cpp
 index ecdc57e..897970b 100644
 --- a/libdnf5/utils/system.cpp
