@@ -16,6 +16,27 @@ index 81a971d..7cd9ed9 100644
          CPPUNIT_ASSERT(stdfs::exists(path));
          CPPUNIT_ASSERT_EQUAL(stdfs::status(path).type(), stdfs::file_type::directory);
      }
+diff --git a/test/libdnf5/utils/test_locker.cpp b/test/libdnf5/utils/test_locker.cpp
+index 3fb22e7..a83c019 100644
+--- a/test/libdnf5/utils/test_locker.cpp
++++ b/test/libdnf5/utils/test_locker.cpp
+@@ -13,6 +13,7 @@
+ #include <fstream>
+ #include <string>
+ 
++#include <zos-filesystem.h>
+ 
+ using namespace libdnf5::utils;
+ 
+@@ -27,7 +28,7 @@ void UtilsLockerTest::setUp() {
+ 
+ 
+ void UtilsLockerTest::tearDown() {
+-    std::filesystem::remove_all(temp_dir);
++    portable_remove_all(temp_dir);
+ }
+ 
+ 
 diff --git a/test/libdnf5/utils/test_subprocess.cpp b/test/libdnf5/utils/test_subprocess.cpp
 index 20fdb7c..8673b54 100644
 --- a/test/libdnf5/utils/test_subprocess.cpp
