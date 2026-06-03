@@ -38,7 +38,7 @@ index 3fb22e7..a83c019 100644
  
  
 diff --git a/test/libdnf5/utils/test_subprocess.cpp b/test/libdnf5/utils/test_subprocess.cpp
-index 20fdb7c..8673b54 100644
+index 20fdb7c..afe16bd 100644
 --- a/test/libdnf5/utils/test_subprocess.cpp
 +++ b/test/libdnf5/utils/test_subprocess.cpp
 @@ -34,8 +34,8 @@ void UtilsSubprocessTest::test_stdout_capture() {
@@ -82,6 +82,20 @@ index 20fdb7c..8673b54 100644
 -    CPPUNIT_ASSERT_EQUAL(std::string(""), bytes_to_string(result.stderr));
 +    CPPUNIT_ASSERT_EQUAL(std::string(""), bytes_to_string(result.out));
 +    CPPUNIT_ASSERT_EQUAL(std::string(""), bytes_to_string(result.err));
+ }
+ 
+ 
+@@ -81,10 +81,10 @@ void UtilsSubprocessTest::test_exit_code_failure() {
+ 
+ void UtilsSubprocessTest::test_signal_termination() {
+     // Test that signal termination is captured as negative return code
+-    // SIGTERM is signal 15, so we expect returncode to be -15
+-    const auto result = libdnf5::utils::subprocess::run("/usr/bin/env", {"/usr/bin/env", "sh", "-c", "kill -TERM $$"});
++    // SIGKILL is signal 9, so we expect returncode to be -9
++    const auto result = libdnf5::utils::subprocess::run("/usr/bin/env", {"/usr/bin/env", "sh", "-c", "kill -KILL $$"});
+ 
+-    CPPUNIT_ASSERT_EQUAL(-15, result.returncode);
++    CPPUNIT_ASSERT_EQUAL(-9, result.returncode);
  }
  
  
