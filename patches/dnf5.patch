@@ -1,8 +1,8 @@
 diff --git a/dnf5/context.cpp b/dnf5/context.cpp
-index 5a2cac3..bb76b54 100644
+index f6d8447..5a864e2 100644
 --- a/dnf5/context.cpp
 +++ b/dnf5/context.cpp
-@@ -52,6 +52,8 @@
+@@ -56,6 +56,8 @@
  #include <tuple>
  #include <utility>
  
@@ -11,7 +11,7 @@ index 5a2cac3..bb76b54 100644
  namespace fs = std::filesystem;
  
  namespace dnf5 {
-@@ -455,8 +457,8 @@ void Context::Impl::download_and_run(libdnf5::base::Transaction & transaction) {
+@@ -432,8 +434,8 @@ void Context::Impl::download_and_run(libdnf5::base::Transaction & transaction) {
                  _("Location \"{}\" already contains a stored transaction, it will be overwritten."),
                  transaction_store_path.string()));
              if (libdnf5::cli::utils::userconfirm::userconfirm(config)) {

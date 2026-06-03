@@ -1,0 +1,24 @@
+diff --git a/test/libdnf5/rpm/test_transaction.cpp b/test/libdnf5/rpm/test_transaction.cpp
+index c8238dd..ed0a366 100644
+--- a/test/libdnf5/rpm/test_transaction.cpp
++++ b/test/libdnf5/rpm/test_transaction.cpp
+@@ -31,7 +31,7 @@
+ #include <libdnf5/transaction/transaction_history.hpp>
+ 
+ #include <filesystem>
+-
++#include <zos-filesystem.h>
+ 
+ CPPUNIT_TEST_SUITE_REGISTRATION(RpmTransactionTest);
+ 
+@@ -199,8 +199,8 @@ void RpmTransactionTest::test_source_date_epoch_sorting() {
+     std::sort(packages.begin(), packages.end());
+     do {
+         // recreate the installroot each time so we start from scratch
+-        std::filesystem::remove_all(installroot);
+-        std::filesystem::create_directory(installroot);
++        portable_remove_all(installroot);
++	std::filesystem::create_directory(installroot);
+ 
+         libdnf5::Goal goal(base);
+         for (const auto & pkg : packages) {

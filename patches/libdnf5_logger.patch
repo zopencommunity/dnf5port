@@ -56,3 +56,32 @@ index 3724f34..5b4939a 100644
                    pid,
                    level_to_cstr(level),
                    message)
+diff --git a/libdnf5/logger/rotating_file_logger.cpp b/libdnf5/logger/rotating_file_logger.cpp
+index bfd5b76..b2b574f 100644
+--- a/libdnf5/logger/rotating_file_logger.cpp
++++ b/libdnf5/logger/rotating_file_logger.cpp
+@@ -189,6 +189,16 @@ void RotatingFileLogger::Impl::write(const char * line) noexcept {
+ 
+                             // Rotate the last file by atomically swapping it with
+                             // the prepared file.
++#ifdef __MVS__
++                            // z/OS doesn't support RENAME_EXCHANGE, use regular rename
++                            if (::rename(base_file_path.string().c_str(), new_name.c_str()) == 0) {
++                                ::close(log_file_fd);
++                                log_file_fd = ::open(base_file_path.string().c_str(), LOG_FILE_OPEN_FLAGS, LOG_FILE_OPEN_MODE);
++                            }
++                            if (new_fd != -1) {
++                                ::close(new_fd);
++                            }
++#else
+                             if (!renameat2(
+                                     AT_FDCWD,
+                                     base_file_path.string().c_str(),
+@@ -200,6 +210,7 @@ void RotatingFileLogger::Impl::write(const char * line) noexcept {
+                             } else {
+                                 ::close(new_fd);
+                             }
++#endif
+                         }
+                     } catch (...) {
+                     }

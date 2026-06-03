@@ -1,8 +1,18 @@
 diff --git a/libdnf5-cli/progressbar/progress_bar.cpp b/libdnf5-cli/progressbar/progress_bar.cpp
-index 6656769..0692cbd 100644
+index 9098296..214982d 100644
 --- a/libdnf5-cli/progressbar/progress_bar.cpp
 +++ b/libdnf5-cli/progressbar/progress_bar.cpp
-@@ -306,7 +306,7 @@ void ProgressBar::update() {
+@@ -103,7 +103,8 @@ const ProgressBar::Impl::MessageMetrics & ProgressBar::Impl::get_message_metrics
+         if (bytes_consumed == 0 || bytes_consumed >= SIZE_MAX - 1) {
+             break;
+         }
+-        auto char_width = static_cast<std::size_t>(wcwidth(wc));
++        int width = wcwidth(wc);
++        auto char_width = width >= 0 ? static_cast<std::size_t>(width) : 0;
+ 
+         // If the character doesn't fit, wrap to the next line
+         if (current_column + char_width > terminal_width) {
+@@ -308,7 +309,7 @@ void ProgressBar::update() {
              static_cast<int32_t>(static_cast<float>(p_impl->ticks) / static_cast<float>(p_impl->total_ticks) * 100);
      }
  

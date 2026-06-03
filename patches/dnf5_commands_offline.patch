@@ -1,5 +1,5 @@
 diff --git a/dnf5/commands/offline/offline.cpp b/dnf5/commands/offline/offline.cpp
-index 0a21525..531bc58 100644
+index fa896f9..d72d551 100644
 --- a/dnf5/commands/offline/offline.cpp
 +++ b/dnf5/commands/offline/offline.cpp
 @@ -47,6 +47,8 @@

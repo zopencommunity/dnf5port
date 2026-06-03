@@ -20,7 +20,7 @@ index 7cebc14..9114706 100644
      } catch (std::exception &) {
          // catch an exception that shouldn't be raised in a destructor
 diff --git a/libdnf5/utils/fs/utils.cpp b/libdnf5/utils/fs/utils.cpp
-index d51ff6b..faa485a 100644
+index eeaacd7..0892125 100644
 --- a/libdnf5/utils/fs/utils.cpp
 +++ b/libdnf5/utils/fs/utils.cpp
 @@ -26,6 +26,8 @@

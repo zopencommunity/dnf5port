@@ -1,16 +1,15 @@
 diff --git a/include/libdnf5/base/base.hpp b/include/libdnf5/base/base.hpp
-index cac6d35..6c4e3e6 100644
+index 9c6e3c4..71ff247 100644
 --- a/include/libdnf5/base/base.hpp
 +++ b/include/libdnf5/base/base.hpp
-@@ -38,6 +38,11 @@
- #include "libdnf5/transaction/transaction_history.hpp"
+@@ -39,6 +39,10 @@
  
+ #include <libdnf5/utils/locker.hpp>
  
 +#ifdef __MVS__
 +FILE *memstream_open(char **out_buf, size_t *out_len);
 +int memstream_finish(FILE *fp, char **out_buf, size_t *out_len);
 +#endif
-+
+ 
  namespace libdnf5::module {
  
- class ModuleDB;
