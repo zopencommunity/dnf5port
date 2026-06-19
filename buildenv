@@ -34,7 +34,7 @@ export ZOPEN_RUNTIME_DEPS="rpm"
 export ZOPEN_SYSTEM_PREREQ=""
 
 export USE_ZOSLIB_LOCALE=1
-export USE_CLANG_WRAPPER=1
+#export USE_CLANG_WRAPPER=1
 
 ###
 ### Build stage control environment variables
@@ -156,6 +156,13 @@ EOF
   ## This function runs before the 'patch' step of the build is run.
 #}
 
+zopen_pre_patch()
+{
+  export CFLAGS="$CPPFLAGS $CFLAGS"
+  export CXXFLAGS="$CPPFLAGS $CXXFLAGS"
+  export LDFLAGS="$LDFLAGS $LIBS"
+}
+
 #zopen_pre_terminate(){
   ## This function runs before 'zopen build' terminates.
 #}
@@ -171,7 +178,7 @@ export ZOPEN_EXTRA_CPPFLAGS="-D__XPLAT=1 -D_POSIX_C_SOURCE=200809L" ## C,C++ pre
 #export ZOPEN_EXTRA_LDFLAGS="" ## C,C++ linker flags to append to LDFLAGS (defaults to '')
 #export ZOPEN_EXTRA_LIBS="" ## C,C++ libraries to append to LIBS (defaults to '')
 #export ZOPEN_BOOTSTRAP_OPTS="" ## Options to pass to bootstrap program (defaults to '')
-export ZOPEN_CHECK_MINIMAL="yes" ## Check program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will get them from env vars.
+#export ZOPEN_CHECK_MINIMAL="yes" ## Check program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will get them from env vars.
 #export ZOPEN_CHECK_OPTS="-C ../build test" ## Options to pass to check program (defaults to 'check')
 #export ZOPEN_CHECK_TIMEOUT="" ## Timeout limit in seconds for the check program (defaults to '12600' # 3.5 hours)
 #export ZOPEN_CLEAN_OPTS="" ## Options to pass to clean up  program (defaults to 'clean')
@@ -180,7 +187,7 @@ export ZOPEN_CONFIGURE_OPTS="-B ../build --install-prefix \$ZOPEN_INSTALL_DIR/ -
 
 #export ZOPEN_EXTRA_CONFIGURE_OPTS="" ## Extra configure options to pass to configuration program. (defaults to '')
 export ZOPEN_INSTALL_OPTS="-C ../build install" ## Options to pass to installation program (defaults to 'install')
-export ZOPEN_MAKE_MINIMAL="yes" ## Build program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will get them from env vars.
+#export ZOPEN_MAKE_MINIMAL="yes" ## Build program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will get them from env vars.
 export ZOPEN_MAKE_OPTS="-C ../build" ## Options to pass to build program (defaults to '-j')
 #export ZOPEN_PATCH_DIR="" ## Specify directory from which patches should be applied.
 
