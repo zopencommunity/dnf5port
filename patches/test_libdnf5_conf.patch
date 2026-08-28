@@ -1,5 +1,5 @@
 diff --git a/test/libdnf5/conf/test_conf.cpp b/test/libdnf5/conf/test_conf.cpp
-index 15be8b6..f3ba507 100644
+index a9c0f2f..4829c29 100644
 --- a/test/libdnf5/conf/test_conf.cpp
 +++ b/test/libdnf5/conf/test_conf.cpp
 @@ -17,8 +17,9 @@
@@ -14,7 +14,7 @@ index 15be8b6..f3ba507 100644
  #include "../shared/utils.hpp"
  
 diff --git a/test/libdnf5/conf/test_option.cpp b/test/libdnf5/conf/test_option.cpp
-index 893b5d6..775315b 100644
+index 9d62371..e2ef89c 100644
 --- a/test/libdnf5/conf/test_option.cpp
 +++ b/test/libdnf5/conf/test_option.cpp
 @@ -17,8 +17,9 @@

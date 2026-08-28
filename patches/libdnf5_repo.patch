@@ -1,8 +1,8 @@
 diff --git a/libdnf5/repo/repo_downloader.cpp b/libdnf5/repo/repo_downloader.cpp
-index 1d13928..f9596f2 100644
+index 63d81ec..3d03963 100644
 --- a/libdnf5/repo/repo_downloader.cpp
 +++ b/libdnf5/repo/repo_downloader.cpp
-@@ -38,6 +38,8 @@
+@@ -39,6 +39,8 @@
  #include <fstream>
  #include <random>
  
@@ -11,7 +11,7 @@ index 1d13928..f9596f2 100644
  #define RECOGNIZED_CHKSUMS {"sha512", "sha256"}
  
  namespace libdnf5::repo {
-@@ -73,7 +75,7 @@ int RepoDownloader::end_cb_full_download(void * data, LrTransferStatus status, c
+@@ -74,7 +76,7 @@ int RepoDownloader::end_cb_full_download(void * data, LrTransferStatus status, c
              auto tmp_item = dir.path();
  
              auto target_item = download_callback_data->destination / tmp_item.filename();

@@ -1,15 +1,15 @@
 diff --git a/libdnf5/conf/config_utils.cpp b/libdnf5/conf/config_utils.cpp
-index 66d39d5..47d531a 100644
+index 4442831..dae3ea0 100644
 --- a/libdnf5/conf/config_utils.cpp
 +++ b/libdnf5/conf/config_utils.cpp
-@@ -23,6 +23,7 @@
- 
+@@ -24,6 +24,7 @@
  #include <glob.h>
  
+ #include <cstring>
 +#include <sstream>
  
- namespace libdnf5 {
  
+ namespace libdnf5 {
 diff --git a/libdnf5/conf/vars.cpp b/libdnf5/conf/vars.cpp
 index 38a398b..7da4a56 100644
 --- a/libdnf5/conf/vars.cpp

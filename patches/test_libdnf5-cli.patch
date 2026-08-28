@@ -23,10 +23,10 @@ index 78242a1..ddcfbb6 100644
  
  
 diff --git a/test/libdnf5-cli/test_progressbar.cpp b/test/libdnf5-cli/test_progressbar.cpp
-index 64442b6..de5e2a7 100644
+index 53b7e77..5022aa5 100644
 --- a/test/libdnf5-cli/test_progressbar.cpp
 +++ b/test/libdnf5-cli/test_progressbar.cpp
-@@ -55,7 +55,11 @@ void ProgressbarTest::test_progress_bar_multi_byte_character() {
+@@ -59,7 +59,11 @@ void ProgressbarTest::test_message_multi_byte_character() {
          "Created symlink '/etc/systemd/user/sockets.target.wants/pipewire.socket' \342\206\222 "
          "'/usr/lib/systemd/user/pipewire.socket'.");
      auto num_lines = progress_bar->calculate_messages_terminal_lines(106);

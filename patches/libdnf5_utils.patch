@@ -1,25 +1,43 @@
 diff --git a/libdnf5/utils/bootc.cpp b/libdnf5/utils/bootc.cpp
-index d6e007f..5f173e1 100644
+index 0027e02..0ec4a65 100644
 --- a/libdnf5/utils/bootc.cpp
 +++ b/libdnf5/utils/bootc.cpp
-@@ -52,7 +52,7 @@ bool is_bootc_system() {
-     // Check if command failed (non-zero exit code)
+@@ -41,7 +41,7 @@ std::unique_ptr<json_object, decltype(&json_object_put)> get_bootc_status() {
+     // Check whether command failed (non-zero exit code)
      if (result.returncode != 0) {
-         // Command ran but failed - show stderr to user
+         // Command ran but failed; show stderr to user
 -        std::string stderr_content(reinterpret_cast<const char *>(result.stderr.data()), result.stderr.size());
 +        std::string stderr_content(reinterpret_cast<const char *>(result.err.data()), result.err.size());
          if (!stderr_content.empty()) {
-             throw libdnf5::RuntimeError(M_("Got the following error checking bootc status: {}"), stderr_content);
+             throw libdnf5::RuntimeError(M_("Error checking bootc status: {}"), stderr_content);
          } else {
-@@ -63,7 +63,7 @@ bool is_bootc_system() {
+@@ -50,7 +50,7 @@ std::unique_ptr<json_object, decltype(&json_object_put)> get_bootc_status() {
+         }
      }
  
-     // Parse JSON output to check if .spec.image is not null
 -    std::string stdout_content(reinterpret_cast<const char *>(result.stdout.data()), result.stdout.size());
 +    std::string stdout_content(reinterpret_cast<const char *>(result.out.data()), result.out.size());
      std::unique_ptr<json_object, decltype(&json_object_put)> root(
          json_tokener_parse(stdout_content.c_str()), json_object_put);
  
+@@ -120,7 +120,7 @@ void make_usr_writable() {
+         // Set up transient overlay
+         const auto & result = subprocess::run("bootc", {"bootc", "usr-overlay", "--read-only"});
+         if (result.returncode != 0) {
+-            std::string stderr_content(reinterpret_cast<const char *>(result.stderr.data()), result.stderr.size());
++            std::string stderr_content(reinterpret_cast<const char *>(result.err.data()), result.err.size());
+             if (!stderr_content.empty()) {
+                 throw libdnf5::RuntimeError(M_("Error running `bootc usr-overlay --read-only`: {}"), stderr_content);
+             } else {
+@@ -139,7 +139,7 @@ void make_usr_writable() {
+     const auto & result = subprocess::run("mount", {"mount", "--options-source=disable", "-o", "remount,rw", "/usr"});
+ 
+     if (result.returncode != 0) {
+-        std::string stderr_content(reinterpret_cast<const char *>(result.stderr.data()), result.stderr.size());
++        std::string stderr_content(reinterpret_cast<const char *>(result.err.data()), result.err.size());
+         throw libdnf5::RuntimeError(M_("Failed to remount /usr as read-write: {}"), stderr_content);
+     }
+ }
 diff --git a/libdnf5/utils/library.cpp b/libdnf5/utils/library.cpp
 index 6d06dcc..f0a1c31 100644
 --- a/libdnf5/utils/library.cpp
@@ -86,10 +104,10 @@ index 59b3ef3..66d819c 100644
  
  }  // namespace libdnf5::utils
 diff --git a/libdnf5/utils/subprocess.cpp b/libdnf5/utils/subprocess.cpp
-index 1a04804..df54e49 100644
+index 33299e0..e9956f6 100644
 --- a/libdnf5/utils/subprocess.cpp
 +++ b/libdnf5/utils/subprocess.cpp
-@@ -137,7 +137,11 @@ CompletedProcess run(const std::string & command, const std::vector<std::string>
+@@ -117,7 +117,11 @@ CompletedProcess run(const std::string & command, const std::vector<std::string>
              }
              _exit(255);
          }
@@ -101,7 +119,7 @@ index 1a04804..df54e49 100644
              ErrorMessage msg{ErrorMessage::BIND_STDIN, errno};
              if (write(pipe_error_msg_from_child.get_out(), &msg, sizeof(msg)) != sizeof(msg)) {
              }
-@@ -146,7 +150,11 @@ CompletedProcess run(const std::string & command, const std::vector<std::string>
+@@ -126,7 +130,11 @@ CompletedProcess run(const std::string & command, const std::vector<std::string>
          ::close(dev_null_fd);
  
          // bind stdout of the child process to the writing end of the pipe
@@ -113,7 +131,7 @@ index 1a04804..df54e49 100644
              ErrorMessage msg{ErrorMessage::BIND_STDOUT, errno};
              if (write(pipe_error_msg_from_child.get_out(), &msg, sizeof(msg)) != sizeof(msg)) {
              }
-@@ -155,7 +163,11 @@ CompletedProcess run(const std::string & command, const std::vector<std::string>
+@@ -135,7 +143,11 @@ CompletedProcess run(const std::string & command, const std::vector<std::string>
          pipe_out_from_child.close_out();
  
          // bind stderr of the child process to the writing end of the pipe
@@ -125,7 +143,7 @@ index 1a04804..df54e49 100644
              ErrorMessage msg{ErrorMessage::BIND_STDERR, errno};
              if (write(pipe_error_msg_from_child.get_out(), &msg, sizeof(msg)) != sizeof(msg)) {
              }
-@@ -279,8 +291,8 @@ CompletedProcess run(const std::string & command, const std::vector<std::string>
+@@ -259,8 +271,8 @@ CompletedProcess run(const std::string & command, const std::vector<std::string>
  
      return CompletedProcess{
          .returncode = returncode,

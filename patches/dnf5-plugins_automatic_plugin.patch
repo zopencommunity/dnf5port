@@ -1,5 +1,5 @@
 diff --git a/dnf5-plugins/automatic_plugin/automatic.cpp b/dnf5-plugins/automatic_plugin/automatic.cpp
-index 29513a9..701cc6d 100644
+index 5578065..e2ba7f8 100644
 --- a/dnf5-plugins/automatic_plugin/automatic.cpp
 +++ b/dnf5-plugins/automatic_plugin/automatic.cpp
 @@ -45,6 +45,8 @@
@@ -11,7 +11,7 @@ index 29513a9..701cc6d 100644
  namespace {
  
  /// Sleep for random number of seconds in interval <0, max_value>
-@@ -387,7 +389,11 @@ void AutomaticCommand::run() {
+@@ -392,7 +394,11 @@ void AutomaticCommand::run() {
          if (!transaction.empty()) {
              char * tt_string;
              size_t size;
@@ -23,7 +23,7 @@ index 29513a9..701cc6d 100644
              {
                  libdnf5::cli::output::TransactionTable table(
                      static_cast<libdnf5::cli::output::ITransaction &>(cli_output_transaction));
-@@ -397,6 +403,9 @@ void AutomaticCommand::run() {
+@@ -402,6 +408,9 @@ void AutomaticCommand::run() {
                  table.print_table();
                  table.print_summary();
              }
@@ -88,12 +88,12 @@ index bac94b4..581e997 100644
      std::string to_str;
      for (const auto & eml : to) {
 diff --git a/dnf5-plugins/automatic_plugin/emitters.cpp b/dnf5-plugins/automatic_plugin/emitters.cpp
-index 3e6a23a..8c08324 100644
+index f13477d..a7a94c9 100644
 --- a/dnf5-plugins/automatic_plugin/emitters.cpp
 +++ b/dnf5-plugins/automatic_plugin/emitters.cpp
-@@ -31,6 +31,33 @@
- #include <iomanip>
+@@ -34,6 +34,33 @@
  #include <iostream>
+ #include <map>
  
 +#ifdef __MVS__
 +FILE *fmemopen(void *buf, size_t size, const char *mode) {
