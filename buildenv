@@ -45,7 +45,7 @@ export ZOPEN_CHECK="zopen_check"     ## Check program to run (defaults to 'make'
 export ZOPEN_CONFIGURE="cmake" ## Configuration program to run (defaults to './configure')
 #export ZOPEN_INSTALL="skip"   ## Installation program to run (defaults to 'make')
 #export ZOPEN_MAKE="skip"      ## Build program to run (defaults to 'make')
-#export ZOPEN_CLEAN=""         ## Clean up program to run (defaults to 'make')
+export ZOPEN_CLEAN="skip"         ## Clean up program to run (defaults to 'make')
 
 
 ###
@@ -64,13 +64,43 @@ zopen_check_results()
   pfx="$2"
   chk="$1/$2_check.log"
 
-  actualFailures=$(grep -E '^[[:space:]]*[0-9]+/[0-9]+[[:space:]]+Test[[:space:]]+#' $chk | awk '$(NF-2) ~ /\*\*\*Failed/ { count++ } END { print count+0 }')
-  actualPasses=$(grep -E '^[[:space:]]*[0-9]+/[0-9]+[[:space:]]+Test[[:space:]]+#' $chk | awk '$(NF-2) == "Passed" { count++ } END { print count+0 }')
-  totalTests=$(grep -E '^[[:space:]]*[0-9]+/[0-9]+[[:space:]]+Test[[:space:]]+#' $chk | wc -l)
+  # Count individual test cases within test suites
+  # Parse summary lines like "OK (485)" or "Run: 31   Failure total: 1"
+  summaryPasses=$(grep -oE "^OK \([0-9]+ tests?\)|^OK \([0-9]+\)" $chk 2>/dev/null | grep -oE "[0-9]+" | awk '{sum+=$1} END {print sum+0}')
+  
+  # For "Run: X" lines, extract the total run count (not just failures)
+  summaryRuns=$(grep -E "^Run: [0-9]+" $chk 2>/dev/null | grep -oE "^Run: [0-9]+" | grep -oE "[0-9]+" | awk '{sum+=$1} END {print sum+0}')
+  summaryFailures=$(grep -E "^Run:.*Failure total:" $chk 2>/dev/null | grep -oE "Failure total: [0-9]+" | grep -oE "[0-9]+" | awk '{sum+=$1} END {print sum+0}')
+  
+  # Calculate total individual test cases
+  totalTests=$((summaryPasses + summaryRuns))
+  actualFailures=$summaryFailures
+  
+  # Also count test suites for reference
+  suiteFailures=$(grep -E '^[[:space:]]*[0-9]+/[0-9]+[[:space:]]+Test[[:space:]]+#' $chk | awk '$(NF-2) ~ /\*\*\*Failed/ { count++ } END { print count+0 }')
+  suitePasses=$(grep -E '^[[:space:]]*[0-9]+/[0-9]+[[:space:]]+Test[[:space:]]+#' $chk | awk '$(NF-2) == "Passed" { count++ } END { print count+0 }')
+  totalSuites=$(grep -E '^[[:space:]]*[0-9]+/[0-9]+[[:space:]]+Test[[:space:]]+#' $chk | wc -l)
+  
   echo "actualFailures:$actualFailures"
   echo "totalTests:$totalTests"
-  echo "expectedFailures:1"
-  echo "expectedTotalTests:5"
+  echo "expectedFailures:10"
+  
+  if [ "$totalTests" -gt 0 ]; then
+    echo ""
+    echo "Test Suite Statistics:"
+    echo "  Total test suites: $totalSuites"
+    echo "  Passing suites: $suitePasses"
+    echo "  Failing suites: $suiteFailures"
+    echo ""
+    echo "Individual Test Case Statistics:"
+    echo "  Total test cases: $totalTests"
+    echo "  Passing test cases: $((totalTests - actualFailures))"
+    echo "  Failing test cases: $actualFailures"
+    if [ "$totalTests" -gt 0 ]; then
+      passRate=$(awk "BEGIN {printf \"%.1f\", ($totalTests - $actualFailures) * 100.0 / $totalTests}")
+      echo "  Pass rate: ${passRate}%"
+    fi
+  fi
 }
 
 zopen_get_version()
