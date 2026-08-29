@@ -1,8 +1,8 @@
 diff --git a/include/libdnf5/base/base.hpp b/include/libdnf5/base/base.hpp
-index 9c6e3c4..71ff247 100644
+index b0084f3..756d789 100644
 --- a/include/libdnf5/base/base.hpp
 +++ b/include/libdnf5/base/base.hpp
-@@ -39,6 +39,10 @@
+@@ -40,6 +40,10 @@
  
  #include <libdnf5/utils/locker.hpp>
  

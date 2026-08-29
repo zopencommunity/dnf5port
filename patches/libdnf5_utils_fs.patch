@@ -20,19 +20,19 @@ index 7cebc14..9114706 100644
      } catch (std::exception &) {
          // catch an exception that shouldn't be raised in a destructor
 diff --git a/libdnf5/utils/fs/utils.cpp b/libdnf5/utils/fs/utils.cpp
-index eeaacd7..0892125 100644
+index 3377854..299cebc 100644
 --- a/libdnf5/utils/fs/utils.cpp
 +++ b/libdnf5/utils/fs/utils.cpp
-@@ -26,6 +26,8 @@
- #include <algorithm>
+@@ -31,6 +31,8 @@
  #include <cstring>
+ #include <system_error>
  
 +#include <zos-filesystem.h>
 +
  namespace libdnf5::utils::fs {
  
  namespace stdfs = std::filesystem;
-@@ -81,7 +83,7 @@ void move_recursive(const std::filesystem::path & src, const std::filesystem::pa
+@@ -86,7 +88,7 @@ void move_recursive(const std::filesystem::path & src, const std::filesystem::pa
          std::filesystem::rename(src, dest);
      } catch (const std::filesystem::filesystem_error &) {
          std::filesystem::copy(src, dest, std::filesystem::copy_options::recursive);

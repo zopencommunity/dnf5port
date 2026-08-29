@@ -26,3 +26,43 @@ index db1a6fc..469a042 100644
  
  pkg_check_modules(SMARTCOLS REQUIRED smartcols)
  list(APPEND LIBDNF5_CLI_PC_REQUIRES_PRIVATE "${SMARTCOLS_MODULE_NAME}")
+diff --git a/libdnf5-cli/session.cpp b/libdnf5-cli/session.cpp
+index b2fa196..282da9d 100644
+--- a/libdnf5-cli/session.cpp
++++ b/libdnf5-cli/session.cpp
+@@ -21,6 +21,8 @@
+ #include <libdnf5-cli/session.hpp>
+ #include <libdnf5/utils/bgettext/bgettext-mark-domain.h>
+ 
++#include <ctime>
++#include <cstring>
+ #include <chrono>
+ #include <limits>
+ #include <sstream>
+@@ -252,13 +254,22 @@ DateOption::DateOption(
+     conf = dynamic_cast<libdnf5::OptionNumber<std::int64_t> *>(
+         parser.add_init_value(std::unique_ptr<libdnf5::OptionNumber<std::int64_t>>(
+             new libdnf5::OptionNumber<int64_t>(0, [](const std::string & value) {
+-                std::istringstream ss(value);
+-                std::chrono::sys_seconds tp;
+-                ss >> std::chrono::parse("%F", tp);
+-                if (ss.fail()) {
++                // Parse date manually using strptime for z/OS compatibility
++                std::tm tm = {};
++                const char* result = strptime(value.c_str(), "%Y-%m-%d", &tm);
++                if (result == nullptr || *result != '\0') {
+                     throw libdnf5::cli::ArgumentParserError(
+                         M_("Invalid date passed: \"{}\". Dates in \"YYYY-MM-DD\" format are expected"), value);
+                 }
++                // Convert to time_t - mktime assumes local time, but we treat input as UTC
++                // Set the tm_isdst to -1 to let mktime determine DST
++                tm.tm_isdst = -1;
++                time_t tt = mktime(&tm);
++                if (tt == -1) {
++                    throw libdnf5::cli::ArgumentParserError(
++                        M_("Invalid date passed: \"{}\". Dates in \"YYYY-MM-DD\" format are expected"), value);
++                }
++                std::chrono::sys_seconds tp{std::chrono::seconds{tt}};
+                 // This option should have used time_t because it is used
+                 // elsewhere, e.g. in PackageQuery::filter_recent().
+                 // Therefore reject out-of-range values right now instead of

@@ -1,5 +1,5 @@
 diff --git a/libdnf5-plugins/CMakeLists.txt b/libdnf5-plugins/CMakeLists.txt
-index e36b285..cb3d6f8 100644
+index 5ab02b6..01fe264 100644
 --- a/libdnf5-plugins/CMakeLists.txt
 +++ b/libdnf5-plugins/CMakeLists.txt
 @@ -1,5 +1,5 @@

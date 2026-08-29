@@ -1,5 +1,5 @@
 diff --git a/dnf5-plugins/CMakeLists.txt b/dnf5-plugins/CMakeLists.txt
-index 2bbe244..ae448d6 100644
+index 2bbe244..476c6e0 100644
 --- a/dnf5-plugins/CMakeLists.txt
 +++ b/dnf5-plugins/CMakeLists.txt
 @@ -8,14 +8,14 @@ set(CMAKE_C_VISIBILITY_PRESET hidden)
@@ -9,7 +9,8 @@ index 2bbe244..ae448d6 100644
 -set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,-z,undefs")
 +#set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,-z,undefs")
  
- add_subdirectory("automatic_plugin")
+-add_subdirectory("automatic_plugin")
++#add_subdirectory("automatic_plugin")
  add_subdirectory("builddep_plugin")
  add_subdirectory("changelog_plugin")
  add_subdirectory("config-manager_plugin")
