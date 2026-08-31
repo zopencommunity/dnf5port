@@ -150,6 +150,7 @@ cat <<EOF
 LIBPATH|prepend|PROJECT_ROOT/lib/libdnf5/plugins/:PROJECT_ROOT/lib/dnf5/plugins/:PROJECT_ROOT/lib/:PROJECT_ROOT/bin/
 RPM_CONFIGDIR|set|PROJECT_ROOT/../../rpm/rpm/lib/rpm/
 RPM_POPTEXEC_PATH|set|PROJECT_ROOT/../../rpm/rpm/bin/
+DNF5_PREFIX|set|PROJECT_ROOT
 EOF
 }
 
@@ -178,9 +179,9 @@ EOF
   ## This function runs before the 'install' step of the build is run.
 #}
 
-#zopen_post_install(){
-  ## This function runs after the 'install' step of the build is run.
-#}
+zopen_post_install(){
+  rm -f "$1/etc/dnf/dnf.conf"
+}
 
 #zopen_pre_patch(){
   ## This function runs before the 'patch' step of the build is run.
