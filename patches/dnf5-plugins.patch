@@ -1,8 +1,8 @@
 diff --git a/dnf5-plugins/CMakeLists.txt b/dnf5-plugins/CMakeLists.txt
-index 2bbe244..476c6e0 100644
+index f883f6c..db2ce89 100644
 --- a/dnf5-plugins/CMakeLists.txt
 +++ b/dnf5-plugins/CMakeLists.txt
-@@ -8,14 +8,14 @@ set(CMAKE_C_VISIBILITY_PRESET hidden)
+@@ -12,14 +12,14 @@ set(CMAKE_C_VISIBILITY_PRESET hidden)
  include_directories("${PROJECT_SOURCE_DIR}/dnf5/include/")
  # These plugins use symbols from dnf5 program, hence the symbold are undefined
  # at link time and cannot pass "-z defs" linker check. Disable the check.
