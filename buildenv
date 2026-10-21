@@ -1,6 +1,6 @@
 # Update bump details accordingly. Use bump check to confirm.
 # bump: dnf5-version /DNF5_VERSION="(.*)"/ https://github.com/rpm-software-management/dnf5/releases|re:#releases/tag/([\d.]+)#$1#
-DNF5_VERSION="5.4.5.0" # Specify a stable release
+DNF5_VERSION="5.4.6.0" # Specify a stable release
 export ZOPEN_STABLE_TAG="${DNF5_VERSION}"
 
 ###
@@ -16,7 +16,7 @@ export ZOPEN_BUILD_LINE="STABLE"
 
 ## Required IF ZOPEN_BUILD_LINE='STABLE'
 export ZOPEN_STABLE_URL="https://github.com/rpm-software-management/dnf5.git"  # Specify the stable build URL (either git or tarball)
-export ZOPEN_STABLE_DEPS="make curl cmake pkgconfig toml11 fmt jsonc libsolv rpm popt libxml2 librepo glib libpsl sqlite gettext bash-completion util-linux zlib bzip2 xz zstd lua libgcrypt libgpgme libgpgerror libassuan check_python cppunit createrepo_c bash gawk grep libpkgmanifest yamlcpp rpmconfig" # Specify the stable build dependencies.
+export ZOPEN_STABLE_DEPS="make cmake pkgconfig toml11 fmt jsonc libsolv rpm libxml2 librepo glib sqlite gettext bash-completion util-linux:lib cppunit createrepo_c bash gawk grep rpmconfig check_python" # Specify the stable build dependencies.
 
 ## Required IF ZOPEN_BUILD_LINE='DEV'
 export ZOPEN_DEV_URL=""   # Specify the dev build URL
@@ -27,7 +27,7 @@ export ZOPEN_DEV_DEPS=""  # Specify the dev build dependencies
 export ZOPEN_CATEGORIES="build_system"
 
 ## Runtime zopen tool dependencies to be installed alongside the tool.
-export ZOPEN_RUNTIME_DEPS="rpmconfig createrepo_c"
+export ZOPEN_RUNTIME_DEPS="rpmconfig"
 
 ## Runtime system prerequisites; supply the name of the system pre-requisties.
 ## Current available prerequisites: zos24 zos25 zos31 procfs (see https://github.com/zopencommunity/meta/blob/main/include/prereq.sh for a current list)
@@ -153,10 +153,16 @@ DNF5_PREFIX|set|PROJECT_ROOT
 EOF
 }
 
-#zopen_init(){
+zopen_init(){
   ## This function runs after code is downloaded and patched but before the code
   ## is built.
-#}
+  if ! type python3 >/dev/null 2>&1 ; then
+    printError "need python3 to build man pages"
+  fi
+  python3 -m venv dnf5_sphinx_venv
+  . ./dnf5_sphinx_venv/bin/activate
+  pip3 install sphinx breathe sphinx-autoapi sphinx_rtd_theme
+}
 
 #zopen_post_buildenv(){
   ## This function runs after the 'buildenv' is processed.
@@ -215,7 +221,7 @@ export ZOPEN_EXTRA_CPPFLAGS="-D__XPLAT=1 -D_POSIX_C_SOURCE=200809L" ## C,C++ pre
 export ZOPEN_CONFIGURE_MINIMAL="yes" ## Configuration program will not be passed CFLAGS, LDFLAGS, CPPFLAGS options but will get them from env vars.
 # Minimal plugin configuration - only essential plugins enabled
 # This reduces the build size significantly by disabling optional plugins
-export ZOPEN_CONFIGURE_OPTS="-B ../build --install-prefix \$ZOPEN_INSTALL_DIR/ -DCMAKE_INSTALL_PREFIX=\$ZOPEN_INSTALL_DIR/ -DCURL_LIBRARY=\"\$CURL_HOME/lib/libcurl.a\" -DCURL_INCLUDE_DIR=\"\$CURL_HOME/include\" -DZLIB_LIBRARY=\"\$ZLIB_HOME/lib/libz.a\" -DWITH_SYSTEMD=OFF -DWITH_DNF5DAEMON_CLIENT=OFF -DWITH_DNF5DAEMON_SERVER=OFF -DWITH_MODULEMD=OFF -DWITH_LIBDNF5_CLI=ON -DWITH_PLUGIN_APPSTREAM=OFF -DWITH_PYTHON_PLUGINS_LOADER=OFF -DWITH_PERL5=OFF -DWITH_PYTHON3=OFF -DWITH_RUBY=OFF -DWITH_TESTS=ON -DWITH_MAN=OFF -DWITH_HTML=OFF -DWITH_ACL=OFF -DWITH_PLUGIN_ACTIONS=ON -DWITH_PLUGIN_LOCAL=ON -DWITH_PLUGIN_EXPIRED_PGP_KEYS=OFF -DWITH_PLUGIN_SYSTEMD_INHIBIT=OFF -DWITH_PLUGIN_MANIFEST=OFF -DWITH_DNF5_PLUGINS=OFF" ## Options to pass to configuration program (defaults to '--prefix=')
+export ZOPEN_CONFIGURE_OPTS="-B ../build --install-prefix \$ZOPEN_INSTALL_DIR/ -DCMAKE_INSTALL_PREFIX=\$ZOPEN_INSTALL_DIR/ -DWITH_SYSTEMD=OFF -DWITH_DNF5DAEMON_CLIENT=OFF -DWITH_DNF5DAEMON_SERVER=OFF -DWITH_MODULEMD=OFF -DWITH_LIBDNF5_CLI=ON -DWITH_PLUGIN_APPSTREAM=OFF -DWITH_PYTHON_PLUGINS_LOADER=OFF -DWITH_PERL5=OFF -DWITH_PYTHON3=OFF -DWITH_RUBY=OFF -DWITH_TESTS=ON -DWITH_MAN=ON -DWITH_HTML=OFF -DWITH_ACL=OFF -DWITH_PLUGIN_ACTIONS=ON -DWITH_PLUGIN_LOCAL=OFF -DWITH_PLUGIN_EXPIRED_PGP_KEYS=OFF -DWITH_PLUGIN_SYSTEMD_INHIBIT=OFF -DWITH_PLUGIN_MANIFEST=OFF -DWITH_DNF5_PLUGINS=OFF" ## Options to pass to configuration program (defaults to '--prefix=')
 
 #export ZOPEN_EXTRA_CONFIGURE_OPTS="" ## Extra configure options to pass to configuration program. (defaults to '')
 export ZOPEN_INSTALL_OPTS="-C ../build install" ## Options to pass to installation program (defaults to 'install')
@@ -237,5 +243,4 @@ export ZOPEN_MAKE_OPTS="-C ../build" ## Options to pass to build program (defaul
 ###
 
 ## Add user-defined functions and code
-
 

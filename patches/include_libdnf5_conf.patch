@@ -1,5 +1,5 @@
 diff --git a/include/libdnf5/conf/const.hpp b/include/libdnf5/conf/const.hpp
-index cc079f1..f3cf782 100644
+index 42a7f44..d08b924 100644
 --- a/include/libdnf5/conf/const.hpp
 +++ b/include/libdnf5/conf/const.hpp
 @@ -45,7 +45,11 @@ constexpr const char * REPOS_OVERRIDE_DIR = "/etc/dnf/repos.override.d";

@@ -1,8 +1,11 @@
 diff --git a/libdnf5-plugins/CMakeLists.txt b/libdnf5-plugins/CMakeLists.txt
-index 5ab02b6..01fe264 100644
+index 7a2d8cb..c930dda 100644
 --- a/libdnf5-plugins/CMakeLists.txt
 +++ b/libdnf5-plugins/CMakeLists.txt
-@@ -1,5 +1,5 @@
+@@ -2,8 +2,8 @@ if(ENABLE_HTML_ONLY)
+     return()
+ endif()
+ 
 -set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 -set(CMAKE_C_VISIBILITY_PRESET hidden)
 +#set(CMAKE_CXX_VISIBILITY_PRESET hidden)

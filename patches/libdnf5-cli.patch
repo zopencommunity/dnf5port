@@ -1,8 +1,8 @@
 diff --git a/libdnf5-cli/CMakeLists.txt b/libdnf5-cli/CMakeLists.txt
-index db1a6fc..469a042 100644
+index 41b35e2..4648d6a 100644
 --- a/libdnf5-cli/CMakeLists.txt
 +++ b/libdnf5-cli/CMakeLists.txt
-@@ -28,7 +28,7 @@ list(APPEND LIBDNF5_CLI_PC_REQUIRES_PRIVATE)
+@@ -32,7 +32,7 @@ list(APPEND LIBDNF5_CLI_PC_REQUIRES_PRIVATE)
  include_directories(.)
  
  # build libdnf5-cli.so
@@ -11,7 +11,7 @@ index db1a6fc..469a042 100644
  set(DNF_CLI_SO_VERSION 3)
  set_target_properties(libdnf5-cli PROPERTIES OUTPUT_NAME "dnf5-cli")
  set_target_properties(libdnf5-cli PROPERTIES SOVERSION ${DNF_CLI_SO_VERSION})
-@@ -46,9 +46,11 @@ target_link_libraries(libdnf5-cli PRIVATE common_obj)
+@@ -50,9 +50,11 @@ target_link_libraries(libdnf5-cli PRIVATE common_obj)
  
  target_link_libraries(libdnf5-cli PUBLIC libdnf5)
  
